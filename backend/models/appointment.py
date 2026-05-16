@@ -15,4 +15,4 @@ class Appointment(Base):
     end_time = Column(Time)
 
     status = Column(String(50))
-    slots_used = Column(Integer)
+    slots_used = Column(Integer)    

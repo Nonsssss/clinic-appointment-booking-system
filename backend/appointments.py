@@ -1,10 +1,17 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from datetime import datetime, timedelta
+from sqlalchemy.orm import Session
+
+
+from database.db import Base, get_db
+from models import appointment
+from models.appointment import Appointment as AppointmentModel
+
 
 router = APIRouter()
 
-appointments = []
+
 
 # Service durations in minutes
 SERVICE_DURATIONS = {
@@ -15,7 +22,7 @@ SERVICE_DURATIONS = {
 }
 
 
-class Appointment(BaseModel):
+class AppointmentCreate(BaseModel):
     fullname: str
     service: str
     appointment_date: str
@@ -23,68 +30,71 @@ class Appointment(BaseModel):
 
 
 @router.post("/appointments")
-def create_appointment(appointment: Appointment):
+def create_appointment(payload: AppointmentCreate, db: Session = Depends(get_db)):
 
-    if appointment.service not in SERVICE_DURATIONS:
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid service"
-        )
+    # Validate service
+    if payload.service not in SERVICE_DURATIONS:
+        raise HTTPException(status_code=400, detail="Invalid service")
 
-    duration = SERVICE_DURATIONS[appointment.service]
+    duration = SERVICE_DURATIONS[payload.service]
 
-    # Convert requested appointment to datetime
+    # Convert input datetime
     start_datetime = datetime.strptime(
-        f"{appointment.appointment_date} {appointment.appointment_time}",
+        f"{payload.appointment_date} {payload.appointment_time}",
         "%Y-%m-%d %H:%M"
     )
 
     end_datetime = start_datetime + timedelta(minutes=duration)
 
-    # Check overlapping appointments
-    for existing in appointments:
+    # Get existing appointments
+    existing_appointments = db.query(AppointmentModel).all()
 
-        existing_duration = SERVICE_DURATIONS[existing["service"]]
+    for existing in existing_appointments:
 
-        existing_start = datetime.strptime(
-            f"{existing['appointment_date']} {existing['appointment_time']}",
-            "%Y-%m-%d %H:%M"
+        existing_start = datetime.combine(
+            existing.appointment_date,
+            existing.start_time
         )
 
-        existing_end = existing_start + timedelta(
-            minutes=existing_duration
+        existing_end = datetime.combine(
+            existing.appointment_date,
+            existing.end_time
         )
 
         # Overlap check
-        if (
-            start_datetime < existing_end
-            and end_datetime > existing_start
-        ):
+        if start_datetime < existing_end and end_datetime > existing_start:
             raise HTTPException(
                 status_code=400,
-                detail=(
-                    f"Time conflict. "
-                    f"Next available slot after "
-                    f"{existing_end.strftime('%H:%M')}"
-                )
+                detail=f"Time conflict. Next available after {existing_end.strftime('%Y-%m-%d %H:%M')}"
             )
 
-    new_appointment = {
-        "fullname": appointment.fullname,
-        "service": appointment.service,
-        "appointment_date": appointment.appointment_date,
-        "appointment_time": appointment.appointment_time,
-        "end_time": end_datetime.strftime("%H:%M")
-    }
+    # Create appointment
+    new_appointment = AppointmentModel(
+        patient_name=payload.fullname,   # FIXED TYPO
+        service_id=1,  # TODO: map properly later
+        doctor_id=1,
+        appointment_date=start_datetime.date(),
+        start_time=start_datetime.time(),
+        end_time=end_datetime.time(),
+        status="pending",
+        slots_used=1
+    )
 
-    appointments.append(new_appointment)
+    db.add(new_appointment)
+    db.commit()
+    db.refresh(new_appointment)
 
     return {
         "message": "Appointment booked successfully",
-        "appointment": new_appointment
+        "appointment": {
+            "id": new_appointment.appointment_id,
+            "start": str(new_appointment.start_time),
+            "end": str(new_appointment.end_time)
+        }
     }
 
 
 @router.get("/appointments")
-def get_appointments():
-    return appointments
+def get_appointments(db: Session = Depends(get_db)):
+    
+    return db.query(AppointmentModel).all()
