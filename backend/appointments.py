@@ -1,40 +1,87 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from datetime import date, time
+from datetime import datetime, timedelta
 
 router = APIRouter()
 
-# Temporary fake database
 appointments = []
+
+# Service durations in minutes
+SERVICE_DURATIONS = {
+    "Medical Clearance": 5,
+    "Medical Clearance for Freshmen": 15,
+    "Assessment for Internship": 15,
+    "Dental Consultation": 20
+}
 
 
 class Appointment(BaseModel):
     fullname: str
     service: str
-    appointment_date: date
-    appointment_time: time
+    appointment_date: str
+    appointment_time: str
 
 
 @router.post("/appointments")
 def create_appointment(appointment: Appointment):
 
-    # Check double booking
+    if appointment.service not in SERVICE_DURATIONS:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid service"
+        )
+
+    duration = SERVICE_DURATIONS[appointment.service]
+
+    # Convert requested appointment to datetime
+    start_datetime = datetime.strptime(
+        f"{appointment.appointment_date} {appointment.appointment_time}",
+        "%Y-%m-%d %H:%M"
+    )
+
+    end_datetime = start_datetime + timedelta(minutes=duration)
+
+    # Check overlapping appointments
     for existing in appointments:
 
+        existing_duration = SERVICE_DURATIONS[existing["service"]]
+
+        existing_start = datetime.strptime(
+            f"{existing['appointment_date']} {existing['appointment_time']}",
+            "%Y-%m-%d %H:%M"
+        )
+
+        existing_end = existing_start + timedelta(
+            minutes=existing_duration
+        )
+
+        # Overlap check
         if (
-            existing["appointment_date"] == appointment.appointment_date
-            and existing["appointment_time"] == appointment.appointment_time
+            start_datetime < existing_end
+            and end_datetime > existing_start
         ):
             raise HTTPException(
                 status_code=400,
-                detail="Time slot already booked"
+                detail=(
+                    f"Time conflict. "
+                    f"Next available slot after "
+                    f"{existing_end.strftime('%H:%M')}"
+                )
             )
 
-    appointments.append(appointment.dict())
+    new_appointment = {
+        "fullname": appointment.fullname,
+        "service": appointment.service,
+        "appointment_date": appointment.appointment_date,
+        "appointment_time": appointment.appointment_time,
+        "end_time": end_datetime.strftime("%H:%M")
+    }
+
+    appointments.append(new_appointment)
 
     return {
         "message": "Appointment booked successfully",
-        "data": appointment
+        "appointment": new_appointment
     }
 
 
