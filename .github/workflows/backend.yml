@@ -57,7 +57,7 @@ jobs:
 
       - name: Import SQL Database
         run: |
-          mysql -h 127.0.0.1 -u root -proot clinic_booking_system < backend/clinic_booking_system.sql
+          mysql -h 127.0.0.1 -u root -proot clinic_booking_system < backend/database/clinic_booking_system.sql
 
       - name: Run FastAPI check
         env:
