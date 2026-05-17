@@ -64,19 +64,19 @@ jobs:
         run: |
           mysql -h 127.0.0.1 -u root -proot clinic_booking_system < backend/database/clinic_booking_system.sql
 
-       - name: Test DB connection via SQLAlchemy
+      - name: Test DB connection via SQLAlchemy
         env:
           DATABASE_URL: mysql+pymysql://appuser:app123@127.0.0.1:3306/clinic_booking_system
         run: |
           cd backend
           python - << 'EOF'
-from database.db import engine
-from sqlalchemy import text
+            from database.db import engine
+            from sqlalchemy import text
 
-with engine.connect() as conn:
-    result = conn.execute(text("SELECT 1"))
-    print("DB CONNECTED:", result.scalar())
-EOF
+        with engine.connect() as conn:
+          result = conn.execute(text("SELECT 1"))
+          print("DB CONNECTED:", result.scalar())
+          EOF
        
 
       # ❌ DO NOT start full uvicorn in CI unless needed
