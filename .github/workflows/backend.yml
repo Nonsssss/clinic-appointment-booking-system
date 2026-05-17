@@ -70,14 +70,13 @@ jobs:
         run: |
           cd backend
           python - << 'EOF'
-            from database.db import engine
-            from sqlalchemy import text
+          from database.db import engine
+          from sqlalchemy import text
 
-        with engine.connect() as conn:
-          result = conn.execute(text("SELECT 1"))
-          print("DB CONNECTED:", result.scalar())
+          with engine.connect() as conn:
+              result = conn.execute(text("SELECT 1"))
+              print("DB CONNECTED:", result.scalar())
           EOF
-       
 
       # ❌ DO NOT start full uvicorn in CI unless needed
       # (it’s slow + unnecessary for unit CI)
