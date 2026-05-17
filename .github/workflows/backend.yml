@@ -20,7 +20,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
@@ -44,10 +44,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y mysql-client
 
+      - name: Setup MySQL user for app
+        run: |
+          mysql -h 127.0.0.1 -u root -proot -e "
+          CREATE USER IF NOT EXISTS 'appuser'@'%' IDENTIFIED BY 'app123';
+          GRANT ALL PRIVILEGES ON clinic_booking_system.* TO 'appuser'@'%';
+          FLUSH PRIVILEGES;
+          "
+
       - name: Wait for MySQL
         run: |
           for i in {1..30}; do
-            mysql -h 127.0.0.1 -u root -proot -e "SELECT 1" && break
+            mysqladmin ping -h 127.0.0.1 -u root -proot && break
             echo "Waiting for MySQL..."
             sleep 2
           done
@@ -56,16 +64,26 @@ jobs:
         run: |
           mysql -h 127.0.0.1 -u root -proot clinic_booking_system < backend/database/clinic_booking_system.sql
 
-      - name: Run FastAPI check
+       - name: Test DB connection via SQLAlchemy
         env:
-          DATABASE_URL: mysql+pymysql://root:root@127.0.0.1:3306/clinic_booking_system
+          DATABASE_URL: mysql+pymysql://appuser:app123@127.0.0.1:3306/clinic_booking_system
         run: |
           cd backend
-          python -c "from database.db import engine; print(engine)"
+          python - << 'EOF'
+from database.db import engine
+from sqlalchemy import text
 
-      - name: Start FastAPI server test
+with engine.connect() as conn:
+    result = conn.execute(text("SELECT 1"))
+    print("DB CONNECTED:", result.scalar())
+EOF
+       
+
+      # ❌ DO NOT start full uvicorn in CI unless needed
+      # (it’s slow + unnecessary for unit CI)
+      - name: Run FastAPI import check
         env:
-          DATABASE_URL: mysql+pymysql://root:root@127.0.0.1:3306/clinic_booking_system
+          DATABASE_URL: mysql+pymysql://appuser:app123@127.0.0.1:3306/clinic_booking_system
         run: |
           cd backend
-          timeout 15s uvicorn main:app --host 0.0.0.0 --port 8000
+          python -c "import main; print('FastAPI app imports OK')"
