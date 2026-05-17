@@ -28,7 +28,7 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-  steps:
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -61,5 +61,5 @@ jobs:
           DATABASE_URL: DATABASE_URL: mysql+pymysql://root:root@127.0.0.1:3306/clinic_booking_system
         run: |
           cd backend
-          timeout 15s uvicorn main:app --host 0.0.0.0 --port 8000
+          timeout 15s uvicorn main:app --host 0.0.0.0 --
     
