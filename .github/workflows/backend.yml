@@ -77,9 +77,7 @@ jobs:
               result = conn.execute(text("SELECT 1"))
               print("DB CONNECTED:", result.scalar())
           EOF
-
-      # ❌ DO NOT start full uvicorn in CI unless needed
-      # (it’s slow + unnecessary for unit CI)
+          
       - name: Run FastAPI import check
         env:
           DATABASE_URL: mysql+pymysql://appuser:app123@127.0.0.1:3306/clinic_booking_system
