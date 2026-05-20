@@ -78,11 +78,26 @@ CREATE TABLE `services` (
 --
 
 INSERT INTO `services` (`service_id`, `service_name`, `duration`, `slots_required`, `doctor_id`) VALUES
-(1, 'Medical Consultation', 15, NULL, 1),
-(2, 'Medical Clearance for Freshmen', 15, NULL, 1),
-(3, 'Medical Clearance for Internship', 15, NULL, 1),
-(4, 'Medical Clearance for U-Week', 5, NULL, 1),
-(5, 'Dental Consultation', 20, NULL, 2);
+(1, 'Medical Consultation', 15, 1, 1),
+(2, 'Medical Clearance for Freshmen', 15, 1, 1),
+(3, 'Medical Clearance for Internship', 15, 1, 1),
+(4, 'Medical Clearance for U-Week', 5, 1, 1),
+(5, 'Dental Consultation', 20, 1, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL,
+  `full_name` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `password_hash` varchar(255) DEFAULT NULL,
+  `role` varchar(50) DEFAULT 'student',
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -110,6 +125,13 @@ ALTER TABLE `services`
   ADD KEY `doctor_id` (`doctor_id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -130,6 +152,12 @@ ALTER TABLE `doctors`
 --
 ALTER TABLE `services`
   MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
