@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE-edge">
+        <meta name="viewport" content="width=device-width, initial-scale="1.0>
+        <title>My appointments - HSU</title>
+        <link rel="stylesheet" href="../css/style.css">
+    </head>
+    <body class="dashboard-page">
+
+        <nav class="navbar">
+            <div class="nav-logo">
+                <div class="logo-circle">
+                    <img src="../images/logo2.png" alt="Logo">
+                </div>
+                <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="booking.html">Book Appointment</a></li>
+                <li><a href="appointments.html" class="nav-pill">My Appointments</a></li>
+                <li><a href="index.html" class="nav-logout">Logout</a></li>
+            </ul>
+        </nav>
+
+        <div class="dashboard-container">
+            
+            <h3 class="booking-subtitle">APPOINTMENT HISTORY</h3>
+            <hr class="divider">
+
+            <div class="appointments-table-container">
+                <table class="appointments-table">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Medical Consultation</td>
+                            <td>May 26, 2026</td>
+                            <td>9:00 AM</td>
+                            <td><span class="badge pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>Dental Consultation</td>
+                            <td>April 10, 2026</td>
+                            <td>2:00 PM</td>
+                            <td><span class="badge done">Completed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    </body>
+</html>

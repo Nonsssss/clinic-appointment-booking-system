@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #fff;
+    color: #1a1a2e;
+}
+
+.navbar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    background: #1a1a8e;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;          
+    z-index: 100;
+
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    flex-shrink: 0;
+    border: 2px solid #f0c040;
+}
+
+.nav-title {
+    color: #f0c040;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.hamburger {
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    display: block;
+}
+
+.nav-links {
+    list-style: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background: #1a1a8e;
+    width: 160px;
+    flex-direction: column;
+    display: none;
+    z-index: 150;
+}
+
+.nav-links.open {
+    display: flex;
+}
+
+.nav-links li a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 20px;
+    text-transform: uppercase;
+}
+
+.nav-links li a:hover,
+.nav-links li a.active {
+    background: rgba(255,255,255,0.1);
+    color: #f0c040;
+}
+
+
+/* --- HERO SECTION --- */
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 50px; /* Saktong space sa ibaba ng navbar */
+  background-color: #ffffff;
+}
+
+.hero-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1140px; /* Nilalapadan natin para lumayo ang bilog sa text */
+  gap: 60px; /* Distansya para hindi sila magkadikit */
+}
+
+.hero-text {
+  flex: 1;
+  max-width: 580px;
+}
+
+/* Ang Dilaw na Capsule Badge */
+.hero-label {
+  display: inline-block;
+  background-color: #ffd60a;
+  color: #002855;
+  padding: 6px 18px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  margin-bottom: 30px; /* Binigyan ng saktong puwang ang ilalim */
+}
+
+.hero-heading {
+  font-size: 2.8rem;
+  color: #1c1e21;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.hero-desc {
+  font-size: 1.05rem;
+  color: #65676b;
+  line-height: 1.6;
+  margin-bottom: 35px;
+}
+
+/* --- BUTTONS --- */
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.btn {
+  padding: 12px 32px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #1877f2;
+  color: white;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #1877f2;
+  border: 2px solid #1877f2;
+}
+
+
+.hero-image {
+  flex-shrink: 0;
+}
+
+.hero-img-placeholder {
+  width: 350px; 
+  height: 350px;
+  border-radius: 50%;
+  background-color: #cbd5e1;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+
+
+
+/* ── Buttons ── */
+.btn {
+    padding: 10px 24px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    border: 2px solid #1877F2;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #1877F2;
+    color: #fff;
+}
+
+.btn-primary:hover { background: #1560c0; }
+
+.btn-outline {
+    background: #1877F2;
+    color: #fff;
+}
+
+.btn-outline:hover { background: #1560c0; }
+
+/* ── Services Section ── */
+.services-section {
+    padding: 30px 20px;
+    background: #fff;
+    border-top: 3px solid #f0c040;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.service-card {
+    background: #d9d9d9;
+    border-radius: 16px;
+    height: 120px;
+}
+
+/* ── Footer ── */
+.footer {
+    background: #1a1a2e;
+    color: #aaa;
+    text-align: center;
+    padding: 14px;
+    font-size: 12px;
+}

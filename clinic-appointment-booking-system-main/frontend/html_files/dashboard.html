@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - HSU Appointment Booking</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dashboard-page">
+
+  <nav class="navbar">
+    <div class="nav-logo">
+      <div class="logo-circle">
+        <img src="../images/logo2.png" alt="Logo">
+      </div>
+      <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="dashboard.html" class="nav-pill">Dashboard</a></li>
+      <li><a href="booking.html">Book Appointment</a></li>
+      <li><a href="appointments.html">My Appointments</a></li>
+      <li><a href="index.html" class="nav-logout">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="dashboard-container">
+
+   
+    <div class="user-welcome">
+      <div class="user-avatar">
+        <img src="../images/logo4.png" alt="Avatar">
+      </div>
+      <h2>Good Morning, <span id="student-name">Mingyu</span>! 🔔</h2>
+    </div>
+
+    <hr class="divider">
+
+    
+    <div class="dashboard-section">
+      <h3>Upcoming Appointment</h3>
+      <div class="appointment-cards">
+        <div class="appt-card">
+          <p class="appt-date">May 18, 2026</p>
+          <p class="appt-time">9:00 AM</p>
+          <p class="appt-service">Medical Consultation</p>
+          <p class="appt-status-label">Status:</p>
+          <span class="badge pending">Pending</span>
+        </div>
+        <div class="appt-card empty"></div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+   
+    <div class="dashboard-section">
+      <h3>Available Services:</h3>
+      <div class="service-pills">
+        <a href="booking.html" class="service-pill">Medical Consultation</a>
+        <a href="booking.html" class="service-pill">Dental Consultation</a>
+        <a href="booking.html" class="service-pill">Medical Clearance for Freshmen</a>
+        <a href="booking.html" class="service-pill">Medical Clearance for Internship</a>
+        <a href="booking.html" class="service-pill">Medical Clearance for U-Week</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
