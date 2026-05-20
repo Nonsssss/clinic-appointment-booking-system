@@ -4,127 +4,475 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Book Appointment - HSU</title>
+
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+
+    /* =========================
+       DATE + TIME SECTION
+    ========================= */
+
+    .date-time-container {
+        display: flex;
+        gap: 50px;
+        align-items: flex-start;
+        margin-top: 20px;
+    }
+
+    /* LEFT SIDE */
+    .calendar-section {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .calendar-section input[type="date"] {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        width: 250px;
+    }
+
+    /* RIGHT SIDE */
+    .time-section {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* TIME GRID */
+    .time-slots {
+        display: grid;
+        grid-template-columns: repeat(2, 120px);
+        gap: 12px;
+        max-height: 350px;
+        overflow-y: auto;
+        padding-right: 8px;
+        margin-top: 10px;
+    }
+
+    /* TIME BUTTON */
+    .time-slot {
+        padding: 12px;
+        border: none;
+        background: #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+    .time-slot:hover {
+        background: #bfbfbf;
+    }
+
+    .time-slot.selected {
+        background: #007bff;
+        color: white;
+    }
+
+    /* SELECTED SERVICE */
+    .booking-service-card.selected {
+        border: 2px solid #007bff;
+        background: #eef5ff;
+    }
+
+    /* SCROLLBAR */
+    .time-slots::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .time-slots::-webkit-scrollbar-thumb {
+        background: #bcbcbc;
+        border-radius: 10px;
+    }
+
+    </style>
+
 </head>
+
 <body class="dashboard-page">
 
-  <nav class="navbar">
-    <div class="nav-logo">
-      <div class="logo-circle">
-        <img src="../images/logo2.png" alt="Logo">
-      </div>
-      <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+
+        <div class="nav-logo">
+
+            <div class="logo-circle">
+                <img src="../images/logo2.png" alt="Logo">
+            </div>
+
+            <span class="nav-title">
+                HSU APPOINTMENT BOOKING SYSTEM
+            </span>
+
+        </div>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="dashboard.html">
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="booking.html" class="nav-pill">
+                    Book Appointment
+                </a>
+            </li>
+
+            <li>
+                <a href="appointments.html">
+                    My Appointments
+                </a>
+            </li>
+
+            <li>
+                <a href="index.html" class="nav-logout">
+                    Logout
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+    <!-- MAIN CONTAINER -->
+    <div class="dashboard-container">
+
+        <a href="dashboard.html" class="back-link">
+            ← Select A Service
+        </a>
+
+        <hr class="divider">
+
+        <!-- SERVICES -->
+        <div class="booking-section">
+
+            <h3 class="booking-subtitle">
+                Available Services
+            </h3>
+
+            <div class="booking-services-grid">
+
+                <div class="booking-service-card">
+                    <ion-icon name="medkit-outline"></ion-icon>
+                    <p>Medical Consultation</p>
+                </div>
+
+                <div class="booking-service-card">
+                    <ion-icon name="medical-outline"></ion-icon>
+                    <p>Dental Consultation</p>
+                </div>
+
+                <div class="booking-service-card">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                    <p>Medical Clearance for Freshmen</p>
+                </div>
+
+                <div class="booking-service-card">
+                    <ion-icon name="briefcase-outline"></ion-icon>
+                    <p>Medical Clearance for Internship</p>
+                </div>
+
+                <div class="booking-service-card">
+                    <ion-icon name="trophy-outline"></ion-icon>
+                    <p>Medical Clearance for University Week</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <hr class="divider">
+
+        <!-- PATIENT INFO -->
+        <div class="booking-section">
+
+            <h3 class="booking-subtitle">
+                Patient Information
+            </h3>
+
+            <div class="patient-form">
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" placeholder="Enter your age">
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>Gender</label>
+
+                        <select>
+                            <option value="">
+                                -- Select Gender --
+                            </option>
+
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Prefer not to say</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input type="text" placeholder="Enter your contact number">
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+
+                    <label>Reason for Visit</label>
+
+                    <textarea placeholder="Briefly describe your concern"></textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <hr class="divider">
+
+        <!-- DATE + TIME -->
+        <div class="booking-section">
+
+            <h3 class="booking-subtitle">
+                Select Date and Time
+            </h3>
+
+            <div class="date-time-container">
+
+                <!-- LEFT SIDE -->
+                <div class="calendar-section">
+
+                    <label>Select Date</label>
+
+                    <input type="date" id="appt-date">
+
+                </div>
+
+                <!-- RIGHT SIDE -->
+                <div class="time-section">
+
+                    <label>
+                        Time (w/ 5 minutes increment)
+                    </label>
+
+                    <div id="timeSlots" class="time-slots"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="booking-actions">
+
+            <a href="dashboard.html" class="btn btn-outline">
+                Cancel
+            </a>
+
+            <a href="#" class="btn btn-primary">
+                Confirm
+            </a>
+
+        </div>
+
     </div>
-    <ul class="nav-links">
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="booking.html" class="nav-pill">Book Appointment</a></li>
-      <li><a href="appointments.html">My Appointments</a></li>
-      <li><a href="index.html" class="nav-logout">Logout</a></li>
-    </ul>
-  </nav>
 
-  <div class="dashboard-container">
+    <!-- IONICONS -->
+    <script type="module"
+    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js">
+    </script>
 
-    <a href="dashboard.html" class="back-link">← Select A Service</a>
-    <hr class="divider">
+    <script nomodule
+    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
+    </script>
 
-    
-    <div class="booking-section">
-      <h3 class="booking-subtitle">Available Services</h3>
-      <div class="booking-services-grid">
-        <div class="booking-service-card">
-          <ion-icon name="medkit-outline"></ion-icon>
-          <p>Medical Consultation</p>
-        </div>
-        <div class="booking-service-card">
-          <ion-icon name="medical-outline"></ion-icon>
-          <p>Dental Consultation</p>
-        </div>
-        <div class="booking-service-card">
-          <ion-icon name="document-text-outline"></ion-icon>
-          <p>Medical Clearance for Freshmen</p>
-        </div>
-        <div class="booking-service-card">
-          <ion-icon name="briefcase-outline"></ion-icon>
-          <p>Medical Clearance for Internship</p>
-        </div>
-        <div class="booking-service-card">
-          <ion-icon name="trophy-outline"></ion-icon>
-          <p>Medical Clearance for U-Week</p>
-        </div>
-      </div>
-    </div>
+    <!-- JS -->
+    <script>
 
-    <hr class="divider">
+    document.addEventListener("DOMContentLoaded", () => {
 
-   
-    <div class="booking-section">
-      <h3 class="booking-subtitle">Patient Information</h3>
-      <div class="patient-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" placeholder="Enter your full name">
-          </div>
-          <div class="form-group">
-            <label>Age</label>
-            <input type="number" placeholder="Enter your age">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Gender</label>
-            <select>
-              <option value="">-- Select Gender --</option>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Prefer not to say</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Contact Number</label>
-            <input type="text" placeholder="Enter your contact number">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" placeholder="Enter your email">
-        </div>
-        <div class="form-group">
-          <label>Reason for Visit</label>
-          <textarea placeholder="Briefly describe your concern"></textarea>
-        </div>
-      </div>
-    </div>
+        // =========================
+        // SERVICE SELECTION
+        // =========================
+        const serviceCards =
+        document.querySelectorAll(".booking-service-card");
 
-    <hr class="divider">
+        let selectedService = null;
 
- 
-<div class="booking-section">
-  <h3 class="booking-subtitle">Select Date and Time</h3>
-  <div class="date-time-container">
-    <div class="time-picker">
-      <div class="form-group">
-        <label>Select Date</label>
-        <input type="date" id="appt-date">
-      </div>
-      <div class="form-group">
-        <label>Select Time (8:00AM - 5:00PM)</label>
-        <input type="time" id="appt-time" min="08:00" max="17:00" step="300">
-      </div>
-    </div>
-  </div>
-</div>  
-    
-    <div class="booking-actions">
-      <a href="dashboard.html" class="btn btn-outline">Cancel</a>
-      <a href="confirmation.html" class="btn btn-primary">Confirm</a>
-    </div>
+        serviceCards.forEach(card => {
 
-  </div>
+            card.addEventListener("click", () => {
 
-  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+                serviceCards.forEach(c => {
+                    c.classList.remove("selected");
+                });
+
+                card.classList.add("selected");
+
+                selectedService =
+                card.querySelector("p").innerText;
+
+            });
+
+        });
+
+        // =========================
+        // DATE LIMIT
+        // =========================
+        const dateInput =
+        document.getElementById("appt-date");
+
+        const today =
+        new Date().toISOString().split("T")[0];
+
+        dateInput.min = today;
+
+        // =========================
+        // TIME SLOT GENERATOR
+        // =========================
+        const timeContainer =
+        document.getElementById("timeSlots");
+
+        let selectedTime = null;
+
+        function generateTimeSlots() {
+
+            timeContainer.innerHTML = "";
+
+            let start = 8 * 60;
+            let end = 17 * 60;
+
+            for (let i = start; i <= end; i += 5) {
+
+                let hours = Math.floor(i / 60);
+
+                let minutes = i % 60;
+
+                let ampm =
+                hours >= 12 ? "PM" : "AM";
+
+                let displayHour =
+                hours % 12 || 12;
+
+                let timeStr =
+                `${displayHour}:${minutes
+                .toString()
+                .padStart(2, "0")} ${ampm}`;
+
+                let btn =
+                document.createElement("button");
+
+                btn.classList.add("time-slot");
+
+                btn.innerText = timeStr;
+
+                btn.addEventListener("click", () => {
+
+                    document
+                    .querySelectorAll(".time-slot")
+                    .forEach(b => {
+                        b.classList.remove("selected");
+                    });
+
+                    btn.classList.add("selected");
+
+                    selectedTime = timeStr;
+
+                });
+
+                timeContainer.appendChild(btn);
+
+            }
+
+        }
+
+        generateTimeSlots();
+
+        // =========================
+        // BOOK APPOINTMENT
+        // =========================
+        document.querySelector(".btn-primary")
+        .addEventListener("click", (e) => {
+
+            e.preventDefault();
+
+            const date = dateInput.value;
+
+            if (!selectedService) {
+
+                alert("Please select a service.");
+                return;
+            }
+
+            if (!date) {
+
+                alert("Please select a date.");
+                return;
+            }
+
+            if (!selectedTime) {
+
+                alert("Please select a time.");
+                return;
+            }
+
+            let appointments =
+            JSON.parse(
+                localStorage.getItem("appointments")
+            ) || [];
+
+            appointments.push({
+
+                service: selectedService,
+                date: date,
+                time: selectedTime,
+                status: "Pending"
+
+            });
+
+            localStorage.setItem(
+                "appointments",
+                JSON.stringify(appointments)
+            );
+
+            alert("Appointment booked successfully!");
+
+            window.location.href =
+            "dashboard.html";
+
+        });
+
+    });
+
+    </script>
+
 </body>
 </html>

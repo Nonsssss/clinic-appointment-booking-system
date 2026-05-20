@@ -33,5 +33,61 @@
 
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <script>
+    // Get buttons
+const dashboardBtn = document.getElementById("dashboardBtn");
+const bookBtn = document.getElementById("bookBtn");
+const myAppointmentsBtn = document.getElementById("myAppointmentsBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+
+// Sections
+const bookingForm = document.getElementById("bookingForm");
+const alreadyBookedMessage = document.getElementById("alreadyBookedMessage");
+
+// Check if user already has appointment
+const hasAppointment = localStorage.getItem("hasAppointment"); // *localStorage * paiba na lang po sa backend
+
+// When page loads
+window.addEventListener("load", () => {
+    if (hasAppointment === "true") {
+        bookingForm.style.display = "none";
+        alreadyBookedMessage.style.display = "block";
+    }
+});
+
+// Dashboard (go to dashboard page)
+dashboardBtn.addEventListener("click", () => {
+    window.location.href = "dashboard.html";
+});
+
+// Book Appointment (refresh ONLY) 
+bookBtn.addEventListener("click", () => {
+    location.reload();
+});
+
+// My Appointments (go to my appointments page)
+myAppointmentsBtn.addEventListener("click", () => {
+    window.location.href = "my-appointments.html";
+});
+
+// Logout (go back to login page)
+logoutBtn.addEventListener("click", () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = "login.html";
+});
+
+
+// CALL THIS WHEN USER SUCCESSFULLY BOOKS
+function completeBooking() {
+    // Save booking state
+    localStorage.setItem("hasAppointment", "true");
+
+    // Hide form, show message
+    bookingForm.style.display = "none";
+    alreadyBookedMessage.style.display = "block";
+}
+  </script>
 </body>
 </html>
