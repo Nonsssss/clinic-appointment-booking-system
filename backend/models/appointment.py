@@ -1,8 +1,9 @@
 from sqlalchemy import Column, Integer, String, Date, Time, ForeignKey
+from sqlalchemy.orm import relationship
 from database.db import Base
 
 class Appointment(Base):
-    __tablename__ = "appointments"
+    _tablename_ = "appointments"
 
     appointment_id = Column(Integer, primary_key=True, index=True)
 
@@ -15,4 +16,7 @@ class Appointment(Base):
     end_time = Column(Time)
 
     status = Column(String(50))
-    slots_used = Column(Integer)    
+    slots_used = Column(Integer)
+
+    service = relationship("Service", back_populates="appointments")
+    doctor = relationship("Doctor", back_populates="appointments")
