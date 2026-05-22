@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from database.db import Base
 
 class Doctor(Base):
-    _tablename_ = "doctors"
+    __tablename__ = "doctors"
 
     doctor_id = Column(Integer, primary_key=True, index=True)
     doctor_name = Column(String(100))

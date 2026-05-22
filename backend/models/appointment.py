@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from database.db import Base
 
 class Appointment(Base):
-    _tablename_ = "appointments"
+    __tablename__ = "appointments"
 
     appointment_id = Column(Integer, primary_key=True, index=True)
 

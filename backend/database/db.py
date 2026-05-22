@@ -3,16 +3,13 @@ import os
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+import dotenv
 
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "mysql+pymysql://root:admin123!@127.0.0.1:3306/clinic_booking_system"
+    "mysql+pymysql://clinic_user:clinic123@127.0.0.1:3306/clinic_booking_system"
 )
-
-
-load_dotenv()
-
 
 
 engine = create_engine(DATABASE_URL, echo=True)
