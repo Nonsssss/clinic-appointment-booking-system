@@ -1,31 +1,37 @@
-from fastapi import FastAPI
+
+
+import models
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from auth import router as auth_router
 from appointments import router as appointment_router
-from database.db import engine, Base
-import models
-
+from database.db import engine, Base, get_db
+from models.appointment import Appointment
+from schemas.appointment import AppointmentCreate
+from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost",
-        "http://localhost:3000",
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-        "null"
-    ],
+    allow_origins=["*"],  # allow all origins
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
+
+Base.metadata.create_all(bind=engine)
+
+
+
+
+
 
 app.include_router(auth_router)
 app.include_router(appointment_router)
 
-Base.metadata.create_all(bind=engine)
 
 
 @app.get("/")
