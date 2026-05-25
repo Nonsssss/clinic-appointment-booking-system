@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - HSU</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dashboard-page">
+
+  <nav class="navbar">
+    <div class="nav-logo">
+      <div class="logo-circle">
+        <img src="../images/logo2.png" alt="Logo">
+      </div>
+      <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="admin-dashboard.html" class="nav-pill">Appointment Requests</a></li>
+      <li><a href="admin-approved.html">Approved Appointments</a></li>
+      <li><a href="index.html" class="nav-logout">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="admin-section">
+      <h3 class="booking-subtitle">APPOINTMENT REQUESTS</h3>
+      <hr class="divider">
+      <div class="appointments-table-container">
+        <table class="appointments-table">
+         <thead>
+    <tr>
+        <th>Student Name</th>
+        <th>Service</th>
+        <th style="text-align: center;">Date</th>
+        <th style="text-align: center;">Time</th>
+        <th style="text-align: center;">Status</th>
+        <th style="text-align: center;">Action</th>
+    </tr>
+</thead>
+          <tbody id="requests-body">
+           <tr>
+    <td>Mingyu</td>
+    <td>Medical Consultation</td>
+    <td style="text-align: center;">May 18, 2026</td>
+    <td style="text-align: center;">9:00 AM</td>
+    <td style="text-align: center;"><span class="badge pending">Pending</span></td>
+    <td style="text-align: center;">
+        <button class="btn-approve">Approve</button>
+        <button class="btn-reject">Reject</button>
+    </td>
+</tr>
+<tr>
+    <td>Hoshi</td>
+    <td>Dental Consultation</td>
+    <td style="text-align: center;">May 19, 2026</td>
+    <td style="text-align: center;">10:00 AM</td>
+    <td style="text-align: center;"><span class="badge pending">Pending</span></td>
+    <td style="text-align: center;">
+        <button class="btn-approve">Approve</button>
+        <button class="btn-reject">Reject</button>
+    </td>
+</tr>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

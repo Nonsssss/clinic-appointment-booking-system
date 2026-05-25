@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approved Appointments - HSU</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dashboard-page">
+
+  <nav class="navbar">
+    <div class="nav-logo">
+      <div class="logo-circle">
+        <img src="../images/logo2.png" alt="Logo">
+      </div>
+      <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="admin-dashboard.html">Appointment Requests</a></li>
+      <li><a href="admin-approved.html" class="nav-pill">Approved Appointments</a></li>
+      <li><a href="index.html" class="nav-logout">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="admin-section">
+      <h3 class="booking-subtitle">APPROVED APPOINTMENTS</h3>
+      <hr class="divider">
+      <div class="appointments-table-container">
+        <table class="appointments-table">
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Service</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="approved-body">
+            <tr>
+              <td>Mingyu</td>
+              <td>Medical Consultation</td>
+              <td>May 15, 2026</td>
+              <td>9:00 AM</td>
+              <td><span class="badge done">Approved</span></td>
+            </tr>
+            <tr>
+              <td>Hoshi</td>
+              <td>Dental Consultation</td>
+              <td>May 16, 2026</td>
+              <td>2:00 PM</td>
+              <td><span class="badge done">Approved</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
