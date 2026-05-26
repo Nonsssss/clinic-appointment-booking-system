@@ -94,7 +94,7 @@
       async function fetchAppointmentHistory() {
         try {
           // Fetch everything from your existing endpoint without restricting by status parameters
-          const response = await fetch("http://127.0.0.1:8000/appointments");
+          const response = await fetch("/appointments");
           if (!response.ok)
             throw new Error("Could not load data from database.");
 

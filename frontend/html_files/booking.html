@@ -413,7 +413,7 @@
           if (dateInput.value && selectedServiceName) {
             const serviceId = serviceMap[selectedServiceName].id;
             try {
-              const res = await fetch(`http://127.0.0.1:8000/appointments/availability/${serviceId}/${dateInput.value}`);
+              const res = await fetch(`/appointments/availability/${serviceId}/${dateInput.value}`);
               const data = await res.json();
               bookedSlots = data.booked || [];
             } catch (err) {

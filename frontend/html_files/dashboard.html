@@ -121,7 +121,7 @@
         try {
           // Pass the logged-in user's ID as a query parameter or header so they only see THEIR data
           const res = await fetch(
-            `http://127.0.0.1:8000/appointments?user_id=${userId}`,
+            `/appointments?user_id=${userId}`,
           );
           const appointments = await res.json();
 
