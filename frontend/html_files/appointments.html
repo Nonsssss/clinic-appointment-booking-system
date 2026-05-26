@@ -1,140 +1,111 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>My Appointments - HSU</title>
 
-    <link rel="stylesheet" href="../css/style.css">
-
-</head>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
 
 <body class="dashboard-page">
 
+    <!-- NAVBAR -->
     <nav class="navbar">
-
-        <div class="nav-logo">
-
-            <div class="logo-circle">
-                <img src="../images/logo2.png" alt="Logo">
-            </div>
-
-            <span class="nav-title">
-                HSU APPOINTMENT BOOKING SYSTEM
-            </span>
-
+      <div class="nav-logo">
+        <div class="logo-circle">
+          <img src="../images/logo2.png" alt="Logo" />
         </div>
 
-        <ul class="nav-links">
+        <span class="nav-title"> HSU APPOINTMENT BOOKING SYSTEM </span>
+      </div>
 
-            <li>
-                <a href="dashboard.html">
-                    Dashboard
-                </a>
-            </li>
+      <ul class="nav-links">
+        <li>
+          <a href="dashboard.html"> Dashboard </a>
+        </li>
 
-            <li>
-                <a href="booking.html">
-                    Book Appointment
-                </a>
-            </li>
+        <li>
+          <a href="booking.html"> Book Appointment </a>
+        </li>
 
-            <li>
-                <a href="appointments.html" class="nav-pill">
-                    My Appointments
-                </a>
-            </li>
+        <li>
+          <a href="appointments.html" class="nav-pill"> My Appointments </a>
+        </li>
 
-            <li>
-                <a href="index.html" class="nav-logout">
-                    Logout
-                </a>
-            </li>
-
-        </ul>
-
+        <li>
+          <a href="index.html" class="nav-logout"> Logout </a>
+        </li>
+      </ul>
     </nav>
 
     <div class="dashboard-container">
+      <h3 class="booking-subtitle">APPOINTMENT HISTORY</h3>
 
-        <h3 class="booking-subtitle">
-            APPOINTMENT HISTORY
-        </h3>
+      <hr class="divider" />
 
-        <hr class="divider">
+      <!-- TABLE -->
+      <div class="appointments-table-container">
+        <table class="appointments-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Service</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
 
-        <!-- TABLE -->
-        <div class="appointments-table-container">
-
-            <table class="appointments-table">
-
-                <thead>
-
-                    <tr>
-                        <th>Service</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Status</th>
-                    </tr>
-
-                </thead>
-
-                <!-- DYNAMIC CONTENT -->
-                <tbody id="appointmentHistory"></tbody>
-
-            </table>
-
-        </div>
-
+          <!-- DYNAMIC CONTENT -->
+          <tbody id="appointmentHistory"></tbody>
+        </table>
+      </div>
     </div>
 
+    <!-- IONICONS -->
     <script type="module"
     src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js">
     </script>
 
-    <script nomodule
-    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
-    </script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
 
     <script>
 
+    // =========================
     // LOAD APPOINTMENTS
+    // =========================
     document.addEventListener("DOMContentLoaded", () => {
 
         // TABLE BODY
         const appointmentContainer =
-        document.getElementById("appointmentHistory");
-
-        // GET SAVED APPOINTMENTS
-        let appointments =
-        JSON.parse(localStorage.getItem("appointments")) || [];
-
-        // CLEAR DEFAULT CONTENT
+          document.getElementById("appointmentHistory");
+        const userId = localStorage.getItem("user_id"); // temporary test user
         appointmentContainer.innerHTML = "";
 
+        // =========================
         // NO APPOINTMENTS
+        // =========================
         if (appointments.length === 0) {
 
             appointmentContainer.innerHTML = `
-                <tr>
-                    <td colspan="4"
-                    style="
-                    text-align:center;
-                    padding: 30px;
-                    font-size:18px;
-                    ">
-                        No appointments yet.
-                    </td>
-                </tr>
+              <tr>
+                <td colspan="4" style="text-align:center;padding:30px;">
+                  No appointments yet.
+                </td>
+              </tr>
             `;
-
             return;
-        }
+          }
 
+        // =========================
         // DISPLAY APPOINTMENTS
+        // =========================
         appointments.forEach(appointment => {
 
             let badgeClass = "";
@@ -151,26 +122,30 @@
             // CREATE TABLE ROW
             const row = document.createElement("tr");
 
+            // 3. Updated keys to mirror our clean backend:
+            // app.service gives the readable text name instead of a raw number ID!
+            // app.time gives our nicely formatted 12-hour string (e.g., 09:00 AM)
             row.innerHTML = `
-                <td>${appointment.service}</td>
-                <td>${appointment.date}</td>
-                <td>${appointment.time}</td>
-
-                <td>
-                    <span class="badge ${badgeClass}">
-                        ${appointment.status}
-                    </span>
-                </td>
+              <td>${app.patient_name}</td>
+              <td>${app.service}</td>
+              <td>${app.date}</td>
+              <td>${app.time}</td>
+              <td><span class="badge ${app.status.toLowerCase()}">${app.status}</span></td>
             `;
 
             appointmentContainer.appendChild(row);
-
-        });
-
-    });
-
+          });
+        } catch (err) {
+          console.error("Error loading appointments:", err);
+          appointmentContainer.innerHTML = `
+            <tr>
+              <td colspan="4" style="text-align:center; padding:30px; color: red;">
+                Failed to load appointments. Please ensure your backend is running.
+              </td>
+            </tr>
+          `;
+        }
+      });
     </script>
-
-</body>
-
+  </body>
 </html>

@@ -1,47 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Book Appointment - HSU</title>
 
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css" />
 
     <style>
 
-    /* DATE + TIME SECTION */
+    /* =========================
+       DATE + TIME SECTION
+    ========================= */
 
-    .date-time-container {
+      .date-time-container {
         display: flex;
         gap: 50px;
         align-items: flex-start;
         margin-top: 20px;
-    }
+      }
 
-    /* LEFT SIDE */
-    .calendar-section {
+      /* LEFT SIDE */
+      .calendar-section {
         display: flex;
         flex-direction: column;
-    }
+      }
 
-    .calendar-section input[type="date"] {
+      .calendar-section input[type="date"] {
         padding: 12px;
         border-radius: 8px;
         border: 1px solid #ccc;
         font-size: 16px;
         width: 250px;
-    }
+      }
 
-    /* RIGHT SIDE */
-    .time-section {
+      /* RIGHT SIDE */
+      .time-section {
         display: flex;
         flex-direction: column;
-    }
+      }
 
-    /* TIME GRID */
-    .time-slots {
+      /* TIME GRID */
+      .time-slots {
         display: grid;
         grid-template-columns: repeat(2, 120px);
         gap: 12px;
@@ -49,10 +51,10 @@
         overflow-y: auto;
         padding-right: 8px;
         margin-top: 10px;
-    }
+      }
 
-    /* TIME BUTTON */
-    .time-slot {
+      /* TIME BUTTON */
+      .time-slot {
         padding: 12px;
         border: none;
         background: #d9d9d9;
@@ -61,407 +63,476 @@
         font-size: 15px;
         font-weight: 600;
         transition: 0.2s ease;
-    }
+      }
 
-    .time-slot:hover {
+      .time-slot:hover {
         background: #bfbfbf;
-    }
+      }
 
-    .time-slot.selected {
+      .time-slot.selected {
         background: #007bff;
         color: white;
-    }
+      }
 
-    /* SELECTED SERVICE */
-    .booking-service-card.selected {
+      /* SELECTED SERVICE */
+      .booking-service-card.selected {
         border: 2px solid #007bff;
         background: #eef5ff;
-    }
+      }
 
-    /* SCROLLBAR */
-    .time-slots::-webkit-scrollbar {
+      /* SCROLLBAR */
+      .time-slots::-webkit-scrollbar {
         width: 6px;
-    }
+      }
 
-    .time-slots::-webkit-scrollbar-thumb {
+      .time-slots::-webkit-scrollbar-thumb {
         background: #bcbcbc;
         border-radius: 10px;
-    }
-
+      }
     </style>
+  </head>
 
-</head>
-
-<body class="dashboard-page">
-
+  <body class="dashboard-page">
     <!-- NAVBAR -->
     <nav class="navbar">
-
-        <div class="nav-logo">
-
-            <div class="logo-circle">
-                <img src="../images/logo2.png" alt="Logo">
-            </div>
-
-            <span class="nav-title">
-                HSU APPOINTMENT BOOKING SYSTEM
-            </span>
-
+      <div class="nav-logo">
+        <div class="logo-circle">
+          <img src="../images/logo2.png" alt="Logo" />
         </div>
 
-        <ul class="nav-links">
+        <span class="nav-title"> HSU APPOINTMENT BOOKING SYSTEM </span>
+      </div>
 
-            <li>
-                <a href="dashboard.html">
-                    Dashboard
-                </a>
-            </li>
+      <ul class="nav-links">
+        <li>
+          <a href="dashboard.html"> Dashboard </a>
+        </li>
 
-            <li>
-                <a href="booking.html" class="nav-pill">
-                    Book Appointment
-                </a>
-            </li>
+        <li>
+          <a href="booking.html" class="nav-pill"> Book Appointment </a>
+        </li>
 
-            <li>
-                <a href="appointments.html">
-                    My Appointments
-                </a>
-            </li>
+        <li>
+          <a href="appointments.html"> My Appointments </a>
+        </li>
 
-            <li>
-                <a href="index.html" class="nav-logout">
-                    Logout
-                </a>
-            </li>
-
-        </ul>
-
+        <li>
+          <a href="index.html" class="nav-logout"> Logout </a>
+        </li>
+      </ul>
     </nav>
 
     <!-- MAIN CONTAINER -->
     <div class="dashboard-container">
+      <a href="dashboard.html" class="back-link"> ← Select A Service </a>
 
-        <a href="dashboard.html" class="back-link">
-            ← Select A Service
-        </a>
+      <hr class="divider" />
 
-        <hr class="divider">
+      <!-- SERVICES -->
+      <div class="booking-section">
+        <h3 class="booking-subtitle">Available Services</h3>
 
-        <!-- SERVICES -->
-        <div class="booking-section">
+        <div class="booking-services-grid">
+          <div class="booking-service-card" data-service-id="1">
+            <ion-icon name="medkit-outline"></ion-icon>
+            <p>Medical Consultation</p>
+          </div>
 
-            <h3 class="booking-subtitle">
-                Available Services
-            </h3>
+          <div class="booking-service-card" data-service-id="5">
+            <ion-icon name="medical-outline"></ion-icon>
+            <p>Dental Consultation</p>
+          </div>
 
-            <div class="booking-services-grid">
+          <div class="booking-service-card" data-service-id="2">
+            <ion-icon name="document-text-outline"></ion-icon>
+            <p>Medical Clearance for Freshmen</p>
+          </div>
 
-                <div class="booking-service-card">
-                    <ion-icon name="medkit-outline"></ion-icon>
-                    <p>Medical Consultation</p>
-                </div>
+          <div class="booking-service-card" data-service-id="3">
+            <ion-icon name="briefcase-outline"></ion-icon>
+            <p>Medical Clearance for Internship</p>
+          </div>
 
-                <div class="booking-service-card">
-                    <ion-icon name="medical-outline"></ion-icon>
-                    <p>Dental Consultation</p>
-                </div>
+          <div class="booking-service-card" data-service-id="4">
+            <ion-icon name="trophy-outline"></ion-icon>
+            <p>Medical Clearance for U-Week</p>
+          </div>
+        </div>
+      </div>
 
-                <div class="booking-service-card">
-                    <ion-icon name="document-text-outline"></ion-icon>
-                    <p>Medical Clearance for Freshmen</p>
-                </div>
+      <hr class="divider" />
 
-                <div class="booking-service-card">
-                    <ion-icon name="briefcase-outline"></ion-icon>
-                    <p>Medical Clearance for Internship</p>
-                </div>
+      <!-- PATIENT INFO -->
+      <div class="booking-section">
+        <h3 class="booking-subtitle">Patient Information</h3>
 
-                <div class="booking-service-card">
-                    <ion-icon name="trophy-outline"></ion-icon>
-                    <p>Medical Clearance for University Week</p>
-                </div>
-
+        <div class="patient-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input
+                id="booking-fullname"
+                type="text"
+                placeholder="Enter your full name"
+                readonly
+              />
             </div>
 
-        </div>
+            <div class="form-group">
+              <label>Age</label>
+              <input id="age" type="number" placeholder="Enter your age" />
+            </div>
+          </div>
 
-        <hr class="divider">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Gender</label>
 
-        <!-- PATIENT INFO -->
-        <div class="booking-section">
+              <select>
+                <option value="">-- Select Gender --</option>
 
-            <h3 class="booking-subtitle">
-                Patient Information
-            </h3>
-
-            <div class="patient-form">
-
-                <div class="form-row">
-
-                    <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" placeholder="Enter your full name">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Age</label>
-                        <input type="number" placeholder="Enter your age">
-                    </div>
-
-                </div>
-
-                <div class="form-row">
-
-                    <div class="form-group">
-
-                        <label>Gender</label>
-
-                        <select>
-                            <option value="">
-                                -- Select Gender --
-                            </option>
-
-                            <option>Male</option>
-                            <option>Female</option>
-                            <option>Prefer not to say</option>
-                        </select>
-
-                    </div>
-
-                    <div class="form-group">
-                        <label>Contact Number</label>
-                        <input type="text" placeholder="Enter your contact number">
-                    </div>
-
-                </div>
-
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" placeholder="Enter your email">
-                </div>
-
-                <div class="form-group">
-
-                    <label>Reason for Visit</label>
-
-                    <textarea placeholder="Briefly describe your concern"></textarea>
-
-                </div>
-
+                <option>Male</option>
+                <option>Female</option>
+                <option>Prefer not to say</option>
+              </select>
             </div>
 
-        </div>
-
-        <hr class="divider">
-
-        <!-- DATE + TIME -->
-        <div class="booking-section">
-
-            <h3 class="booking-subtitle">
-                Select Date and Time
-            </h3>
-
-            <div class="date-time-container">
-
-                <!-- LEFT SIDE -->
-                <div class="calendar-section">
-
-                    <label>Select Date</label>
-
-                    <input type="date" id="appt-date">
-
-                </div>
-
-                <!-- RIGHT SIDE -->
-                <div class="time-section">
-
-                    <label>
-                        Time (w/ 5 minutes increment)
-                    </label>
-
-                    <div id="timeSlots" class="time-slots"></div>
-
-                </div>
-
+            <div class="form-group">
+              <label>Contact Number</label>
+              <input type="text" placeholder="Enter your contact number" />
             </div>
+          </div>
 
+          <div class="form-group">
+            <label>Email</label>
+            <input
+              id="booking-email"
+              type="email"
+              placeholder="Enter your email"
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Reason for Visit</label>
+
+            <textarea placeholder="Briefly describe your concern"></textarea>
+          </div>
         </div>
+      </div>
 
-        <!-- ACTION BUTTONS -->
-        <div class="booking-actions">
+      <hr class="divider" />
 
-            <a href="dashboard.html" class="btn btn-outline">
-                Cancel
-            </a>
+      <!-- DATE + TIME -->
+      <div class="booking-section">
+        <h3 class="booking-subtitle">Select Date and Time</h3>
 
-            <a href="#" class="btn btn-primary">
-                Confirm
-            </a>
+        <div class="date-time-container">
+          <!-- LEFT SIDE -->
+          <div class="calendar-section">
+            <label>Select Date</label>
 
+            <input type="date" id="appt-date" />
+          </div>
+
+          <!-- RIGHT SIDE -->
+          <div class="time-section">
+            <label> Time (w/ 5 minutes increment) </label>
+
+            <div id="timeSlots" class="time-slots"></div>
+          </div>
         </div>
+      </div>
 
+      <!-- ACTION BUTTONS -->
+      <div class="booking-actions">
+        <a href="dashboard.html" class="btn btn-outline"> Cancel </a>
+
+        <button id="confirmBtn" class="btn btn-primary" type="button">
+          Confirm
+        </button>
+      </div>
     </div>
 
     <!-- IONICONS -->
-    <script type="module"
-    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js">
-    </script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
 
-    <script nomodule
-    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
-    </script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
 
     <script>
+      function convertTo24Hour(timeStr) {
+        let [time, modifier] = timeStr.split(" ");
+        let [hours, minutes] = time.split(":");
 
-    document.addEventListener("DOMContentLoaded", () => {
+        if (modifier === "PM" && hours !== "12") {
+          hours = parseInt(hours) + 12;
+        }
+        if (modifier === "AM" && hours === "12") {
+          hours = 0;
+        }
+
+        return `${String(hours).padStart(2, "0")}:${minutes}:00`;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // =========================
+        // ELEMENTS
+        // =========================
+        const serviceCards = document.querySelectorAll(".booking-service-card");
+        const confirmBtn = document.getElementById("confirmBtn");
+        const dateInput = document.getElementById("appt-date");
+        const timeContainer = document.getElementById("timeSlots");
+        
+        const savedFullname = localStorage.getItem("fullname");
+        const savedEmail = localStorage.getItem("email");
+
+        const fullnameInput = document.getElementById("booking-fullname");
+        const emailInput = document.getElementById("booking-email");
+
+        const serviceMap = {
+          "Medical Consultation": { id: 1, duration: 5 },
+          "Medical Clearance for Freshmen": { id: 2, duration: 15 },
+          "Medical Clearance for Internship": { id: 3, duration: 15 },
+          "Medical Clearance for U-Week": { id: 4, duration: 5 },
+          "Dental Consultation": { id: 5, duration: 20 },
+        };
+
+        if (savedFullname && fullnameInput) {
+          fullnameInput.value = savedFullname;
+        }
+
+        if (savedEmail && emailInput) {
+          emailInput.value = savedEmail;
+        }
+        // =========================
+        // STATE
+        // =========================
+        let selectedServiceName = null;
+        let selectedTime = null;
 
         // SERVICE SELECTION
-        const serviceCards =
-        document.querySelectorAll(".booking-service-card");
+        // =========================
+       
 
-        let selectedService = null;
+        serviceCards.forEach((card) => {
+          card.addEventListener("click", () => {
+            serviceCards.forEach((c) => c.classList.remove("selected"));
+            card.classList.add("selected");
 
-        serviceCards.forEach(card => {
+            selectedServiceName = card.querySelector("p").innerText;
 
-            card.addEventListener("click", () => {
-
-                serviceCards.forEach(c => {
-                    c.classList.remove("selected");
-                });
-
-                card.classList.add("selected");
-
-                selectedService =
-                card.querySelector("p").innerText;
-
-            });
-
+            fetchBookedSlots(); // IMPORTANT
+          });
         });
 
         // DATE LIMIT
-        const dateInput =
-        document.getElementById("appt-date");
+        // =========================
+        
 
         const today =
         new Date().toISOString().split("T")[0];
 
         dateInput.min = today;
+        dateInput.addEventListener("change", fetchBookedSlots);
 
-        // TIME SLOT GENERATOR
-        const timeContainer =
-        document.getElementById("timeSlots");
-
-        let selectedTime = null;
-
+        // If a date is preset on load, render slots automatically
+        if (dateInput.value) {
+          fetchBookedSlots();
+        }
+        // =========================
+        // TIME SLOT GENERATION
+        // =========================
+        let bookedSlots = [];
         function generateTimeSlots() {
+          timeContainer.innerHTML = "";
 
-            timeContainer.innerHTML = "";
+          if (!selectedServiceName) {
+            timeContainer.innerHTML =
+              "<p style='color:#666; font-size:14px;'>Please select a service first.</p>";
+            return;
+          }
 
-            let start = 8 * 60;
-            let end = 17 * 60;
+          // Get the current selected service rules
+          const currentService = serviceMap[selectedServiceName];
+          const neededDuration = currentService.duration; // 5, 15, or 20 minutes
 
-            for (let i = start; i <= end; i += 5) {
+          let start = 8 * 60; // 8:00 AM
+          let end = 17 * 60; // 5:00 PM
 
-                let hours = Math.floor(i / 60);
+          for (let i = start; i <= end; i += 5) {
+            let hours = Math.floor(i / 60);
+            let minutes = i % 60;
 
-                let minutes = i % 60;
+            let ampm = hours >= 12 ? "PM" : "AM";
+            let displayHour = hours % 12 || 12;
 
-                let ampm =
-                hours >= 12 ? "PM" : "AM";
+            let timeStr = `${displayHour}:${minutes.toString().padStart(2, "0")} ${ampm}`;
 
-                let displayHour =
-                hours % 12 || 12;
+            let btn = document.createElement("button");
+            btn.classList.add("time-slot");
+            btn.innerText = timeStr;
 
-                let timeStr =
-                `${displayHour}:${minutes
-                .toString()
-                .padStart(2, "0")} ${ampm}`;
+            const now = new Date();
+            const selectedDate = dateInput.value;
 
-                let btn =
-                document.createElement("button");
+            const slotDateTime = new Date(
+              `${selectedDate}T${convertTo24Hour(timeStr)}`,
+            );
 
-                btn.classList.add("time-slot");
-
-                btn.innerText = timeStr;
-
-                btn.addEventListener("click", () => {
-
-                    document
-                    .querySelectorAll(".time-slot")
-                    .forEach(b => {
-                        b.classList.remove("selected");
-                    });
-
-                    btn.classList.add("selected");
-
-                    selectedTime = timeStr;
-
-                });
-
-                timeContainer.appendChild(btn);
-
+            // Disable past times if selected date is today
+            if (
+              selectedDate === now.toISOString().split("T")[0] &&
+              slotDateTime <= now
+            ) {
+              btn.disabled = true;
+              btn.style.opacity = 0.3;
+              btn.style.cursor = "not-allowed";
             }
 
+            // Compute potential appointment window for this specific button
+            const targetIsoStr = `${dateInput.value}T${convertTo24Hour(timeStr)}`;
+            const potentialStart = new Date(targetIsoStr);
+            const potentialEnd = new Date(
+              potentialStart.getTime() + neededDuration * 60000,
+            );
+
+            // Double check validation loop against every existing reservation
+            const isUnavailable = bookedSlots.some((slot) => {
+              const slotStart = new Date(slot.start);
+              const slotEnd = new Date(slot.end);
+
+              // 1. Is the doctor already seeing someone at this exact minute?
+              const overlapCheck =
+                potentialStart >= slotStart && potentialStart < slotEnd;
+
+              // 2. Will this appointment spill over into a future booking?
+              const spilloverCheck =
+                potentialStart < slotStart && potentialEnd > slotStart;
+
+              return overlapCheck || spilloverCheck;
+            });
+
+            if (isUnavailable) {
+              btn.disabled = true;
+              btn.style.opacity = 0.3;
+              btn.style.cursor = "not-allowed";
+            }
+
+            btn.addEventListener("click", () => {
+              if (btn.disabled) return;
+
+              document
+                .querySelectorAll(".time-slot")
+                .forEach((b) => b.classList.remove("selected"));
+
+              btn.classList.add("selected");
+              selectedTime = timeStr;
+            });
+
+            timeContainer.appendChild(btn);
+          }
         }
+
+        async function fetchBookedSlots() {
+          bookedSlots = [];
+
+          if (dateInput.value && selectedServiceName) {
+            const serviceId = serviceMap[selectedServiceName].id;
+
+            try {
+              const res = await fetch(
+                `http://127.0.0.1:8000/appointments/availability/${serviceId}/${dateInput.value}`,
+              );
+
+              const data = await res.json();
+              bookedSlots = data.booked || [];
+            } catch (err) {
+              console.error(err);
+            }
+          }
 
         generateTimeSlots();
 
+        // =========================
         // BOOK APPOINTMENT
-        document.querySelector(".btn-primary")
-        .addEventListener("click", (e) => {
+        // =========================
+        confirmBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
 
-            e.preventDefault();
+          if (!selectedServiceName) {
+            alert("⚠ Please select a service first.");
+            return;
+          }
 
-            const date = dateInput.value;
+          if (!fullnameInput.value) {
+            alert("Please enter your name");
+            return;
+          }
 
-            if (!selectedService) {
+          if (!dateInput.value) {
+            alert("⚠ Please select a date.");
+            return;
+          }
 
-                alert("Please select a service.");
-                return;
-            }
+          if (!selectedTime) {
+            alert("⚠ Please select a time slot.");
+            return;
+          }
 
-            if (!date) {
+          const currentUserId = localStorage.getItem("user_id"); 
+          if (!currentUserId) {
+            alert("❌ Session Error: user_id not found in local storage. Please re-login.");
+            return;
+          }
 
-                alert("Please select a date.");
-                return;
-            }
+          const payload = {
+            fullname: fullnameInput.value,
+            user_id: parseInt(currentUserId),
+            service: selectedServiceName,
+            service_id: serviceMap[selectedServiceName].id,
+            appointment_date: dateInput.value,
+            appointment_time: selectedTime,
+          };
+          fetch("http://127.0.0.1:8000/appointments", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          })
+            .then(async (res) => {
+              // Check if backend returned an error status (like 400 Bad Request)
+              if (!res.ok) {
+                const errorData = await res
+                  .json()
+                  .catch(() => ({ detail: "Unknown server error" }));
+                // 👈 CRITICAL: This breaks the chain completely and jumps straight to .catch()
+                return Promise.reject(errorData);
+              }
+              return res.json(); // If everything is fine, proceed to success
+            })
+            .then((data) => {
+              // This will ONLY run if res.ok was TRUE
+              alert("Appointment booked successfully!");
+              window.location.href = "dashboard.html";
+            })
+            .catch((err) => {
+              // This catches the Promise.reject() from above
+              console.error("Booking failed details:", err);
 
-            if (!selectedTime) {
-
-                alert("Please select a time.");
-                return;
-            }
-
-            let appointments =
-            JSON.parse(
-                localStorage.getItem("appointments")
-            ) || [];
-
-            appointments.push({
-
-                service: selectedService,
-                date: date,
-                time: selectedTime,
-                status: "Pending"
-
+              // Display the exact message sent by your FastAPI backend ("Clinic is occupied...")
+              if (err && err.detail) {
+                alert("❌ Booking failed: " + err.detail);
+              } else {
+                alert("❌ Booking failed: An unexpected error occurred.");
+              }
             });
-
-            localStorage.setItem(
-                "appointments",
-                JSON.stringify(appointments)
-            );
-
-            alert("Appointment booked successfully!");
-
-            window.location.href =
-            "dashboard.html";
-
         });
-
-    });
-
+      });
     </script>
-
-</body>
+  </body>
 </html>

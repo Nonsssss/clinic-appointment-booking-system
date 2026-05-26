@@ -1,102 +1,145 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HSU APPOINTMENT BOOKING SYSTEM</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body class="login-page">
-
-  <nav class="navbar">
-    <div class="nav-logo">
-      <div class="logo-circle">
-        <img src="../images/logo2.png" alt="Logo">
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body class="login-page">
+    <nav class="navbar">
+      <div class="nav-logo">
+        <div class="logo-circle">
+          <img src="../images/logo2.png" alt="Logo" />
+        </div>
+        <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
       </div>
-      <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="index.html#services">Services</a></li>
-      <li><a href="login.html">Login</a></li>
-    </ul>
-  </nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
 
     <div class="login-box">
-        <form action="">
-            <h2>Sign Up</h2>
+      <!-- Changed to track submit directly -->
+      <form id="signupForm">
+        <h2>Sign Up</h2>
 
-            <!-- ⚠️ NOTE: Only email + password exist in your HTML -->
-            <div class="input-box">
-                <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                <input type="email" placeholder="Email" required>
-            </div>
+        <!-- New Full Name Input Box to match backend models/user.py -->
+        <div class="input-box">
+          <span class="icon"><ion-icon name="person"></ion-icon></span>
+          <input type="text" id="fullname" placeholder="Full Name" required />
+        </div>
 
-            <div class="input-box">
-                <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-                <input type="password" placeholder="Password" required>
-            </div>
+        <div class="input-box">
+          <span class="icon"><ion-icon name="mail"></ion-icon></span>
+          <input
+            type="email"
+            id="email"
+            placeholder="Institutional Email"
+            required
+          />
+        </div>
 
-            <a href="login.html" class="btn-login">Sign Up</a>
+        <div class="input-box">
+          <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+        </div>
 
-            <div class="register-link">
-                <p>Already have an account? <a href="login.html">Login</a></p>
-            </div>
+        <!-- Real type="submit" so Enter key works natively -->
+        <button
+          type="submit"
+          class="btn-login"
+          style="width: 100%; border: none; cursor: pointer"
+        >
+          Sign Up
+        </button>
 
-        </form>
+        <div class="register-link">
+          <p>Already have an account? <a href="login.html">Login</a></p>
+        </div>
+      </form>
     </div>
 
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
 
     <script>
-    document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener("DOMContentLoaded", () => {
+        const signupForm = document.getElementById("signupForm");
+        const fullnameInput = document.getElementById("fullname");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
 
-        const signupBtn = document.querySelector(".btn-login");
-        const inputs = document.querySelectorAll(".input-box input");
+        if (signupForm) {
+          signupForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-        const emailInput = inputs[0];
-        const passwordInput = inputs[1];
+            const fullname = fullnameInput.value.trim();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
 
-        if (signupBtn) {
-            signupBtn.addEventListener("click", function (e) {
+            // 1. Validate all fields exist
+            if (!fullname || !email || !password) {
+              alert("⚠ Please fill in all fields.");
+              return;
+            }
 
-                e.preventDefault(); 
+            const payload = {
+              fullname: fullname,
+              email: email,
+              password: password,
+            };
 
-                const email = emailInput.value.trim();
-                const password = passwordInput.value.trim();
+            try {
+              const response = await fetch(
+                "http://127.0.0.1:8000/auth/signup",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                 body: JSON.stringify(payload),
+                },
+              );
 
-                // Check empty fields
-                if (!email || !password) {
-                    alert("Please fill in all fields.");
-                    return;
-                }
+              const data = await response.json();
 
-                // Basic email validation
-                if (!email.includes("@")) {
-                    alert("Please enter a valid email.");
-                    return;
-                }
+              if (!response.ok) {
+                throw new Error(data.detail || "Signup failed");
+              }
 
-                // Create user object
-                const user = {
-                    email: email,
-                    password: password
-                };
+              alert("🎉 Registration successful! You can now log in.");
+              window.location.href = "login.html";
+            } catch (error) {
+              console.error("FULL BACKEND ERROR:", error); 
 
-                // Save to localStorage
-                localStorage.setItem("user", JSON.stringify(user));
-
-                alert("Account created successfully!");
-
-                // Redirect to login page
-                window.location.href = "login.html";
-            });
+              if (error.detail && typeof error.detail === "object") {
+                
+                const messages = error.detail
+                  .map((err) => `${err.loc.join(".")}: ${err.msg}`)
+                  .join("\n");
+                alert("❌ Signup Validation Error:\n" + messages);
+              } else {
+                alert("❌ Signup Error: " + (error.message || error));
+              }
+            }
+          });
         }
-
-    });
+      });
     </script>
-
-</body>
+  </body>
 </html>

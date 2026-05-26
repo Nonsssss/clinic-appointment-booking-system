@@ -8,6 +8,7 @@ from database.db import get_db
 from models.appointment import Appointment as AppointmentModel
 from models.service import Service as ServiceModel
 from schemas.appointment import AppointmentCreate
+from schemas.status import StatusUpdate
 
 router = APIRouter(prefix="/appointments", tags=["appointments"])
 
@@ -163,3 +164,53 @@ def get_appointment_history(user_id: int, db: Session = Depends(get_db)):
     ).order_by(AppointmentModel.appointment_date.desc()).all()
     
     return appointments
+
+
+@router.get("", response_model=List) # Replace dict with your Appointment Out schema if you have one
+def get_appointments(user_id: Optional[int] = None, status: Optional[str] = None, db: Session = Depends(get_db)):
+    query = db.query(AppointmentModel)
+    
+    # If a user_id is passed (from the student view), filter by user
+    if user_id is not None:
+        query = query.filter(AppointmentModel.user_id == user_id)
+        
+    # If a status is passed (e.g., status=pending from admin view), filter by status
+    if status is not None:
+        query = query.filter(AppointmentModel.status.ilike(status)) # .ilike handles case insensitivity safely
+        
+    appointments = query.all()
+    return appointments
+
+@router.get("/processed", response_model=List[dict])
+def get_processed_appointments(db: Session = Depends(get_db)):
+    # Fetch anything that is NOT pending anymore
+    appointments = db.query(AppointmentModel).filter(AppointmentModel.status.notin_(["Pending", "pending"])).all()
+    return appointments
+
+
+@router.put("/{appointment_id}/status")
+def update_appointment_status(appointment_id: int, payload: StatusUpdate, db: Session = Depends(get_db)):
+    # Use the explicit primary key lookup strategy to find the appointment row
+    appointment = db.query(AppointmentModel).get(appointment_id)
+    
+    if not appointment:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Appointment record not found in database."
+        )
+        
+    normalized_status = payload.status.strip().capitalize()
+    
+    try:
+        appointment.status = normalized_status
+        db.commit()
+        db.refresh(appointment)
+        return {"message": f"Appointment status updated to {normalized_status} smoothly.", "id": appointment_id}
+        
+    except Exception as e:
+        db.rollback()
+        print(f"❌ DATABASE UPDATE CRASH: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to write to database: {str(e)}"
+        )

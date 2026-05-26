@@ -1,106 +1,126 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HSU APPOINTMENT BOOKING SYSTEM</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
 
-<body class="login-page">
-
-  <nav class="navbar">
-    <div class="nav-logo">
-      <div class="logo-circle">
-        <img src="../images/logo2.png" alt="Logo">
+  <body class="login-page">
+    <nav class="navbar">
+      <div class="nav-logo">
+        <div class="logo-circle">
+          <img src="../images/logo2.png" alt="Logo" />
+        </div>
+        <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
       </div>
-      <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="index.html#services">Services</a></li>
-      <li><a href="login.html" class="active">Login</a></li>
-    </ul>
-  </nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="login.html" class="active">Login</a></li>
+      </ul>
+    </nav>
 
     <div class="login-box">
-        <form action="">
-            <h2>Login</h2>
+      <form id="loginForm">
+        <h2>Login</h2>
+            
+        <div class="input-box">
+          <span class="icon"><ion-icon name="mail"></ion-icon></span>
+          <input
+            type="email"
+            id="email"
+            placeholder="Institutional Email"
+            required
+          />
+        </div>
+        <small style="color: #666; font-size: 9px">
+          *Freshmen may use their personal Gmail email if RTU email is not
+          yet available.
+        </small>
+        <div class="input-box">
+          <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+        </div>
 
-            <div class="input-box">
-                <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                <input type="email" placeholder="Institutional Email" required>
-            </div>
+        <div class="remember-forgot">
+          <label><input type="checkbox" /> Remember me</label>
+          <a href="#">Forgot Password?</a>
+        </div>
 
-            <div class="input-box">
-                <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-                <input type="password" placeholder="Password" required>
-            </div>
+        <button
+          type="submit"
+          class="btn-login"
+          style="width: 100%; border: none; cursor: pointer"
+        >
+          Login
+        </button>
 
-            <div class="remember-forgot">
-                <label><input type="checkbox"> Remember me</label>
-                <a href="#">Forgot Password?</a>
-            </div>
-
-            <!-- stays as <a>, JS will control it -->
-            <a href="dashboard.html" class="btn-login">Login</a>
-
-            <div class="register-link">
-                <p>Don't have an account? <a href="signup.html">Sign up</a></p>
-            </div>
-
-        </form>
+        <div class="register-link">
+          <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+        </div>
+      </form>
     </div>
 
-    <!-- Ionicons -->
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
 
     <script>
-    document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener("DOMContentLoaded", () => {
+        const loginForm = document.getElementById("loginForm");
 
-    const loginBtn = document.querySelector(".btn-login");
-    const inputs = document.querySelectorAll(".input-box input");
+        if (loginForm) {
+          loginForm.addEventListener("submit", async (e) => {
+            e.preventDefault(); // This officially blocks the browser redirect loop!
 
-    const emailInput = inputs[0];
-    const passwordInput = inputs[1];
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
 
-    function isValidInstitutionalEmail(email) {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailPattern.test(email) && email.endsWith("@rtu.edu.ph");
-    }
+            try {
+              const response = await fetch("http://127.0.0.1:8000/auth/login", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+              });
 
-    if (loginBtn) {
-    loginBtn.addEventListener("click", function () {
+              const data = await response.json();
 
-        event.preventDefault();
+              if (!response.ok) {
+                alert(data.detail || "❌ Login failed");
+                return;
+              }
 
-        const email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
+              localStorage.clear();
+              localStorage.setItem("user_id", String(data.user_id));
+              localStorage.setItem("fullname", String(data.fullname));
+              localStorage.setItem("email", data.email);
 
-        if (!email || !password) {
-            alert("Please fill in all fields.");
-            return;
+              alert("🎉 Login successful!");
+              window.location.href = "dashboard.html";
+            } catch (err) {
+              console.error("Login communication error:", err);
+              alert(
+                "❌ Unable to reach the server. Make sure your FastAPI backend is running.",
+              );
+            }
+          });
         }
-
-        if (email === "hsu_admin@rtu.edu.ph" && password === "123456") {
-            alert("Admin login successful!");
-            window.location.href = "admin-dashboard.html";
-            return; 
-        }
-
-        if (!isValidInstitutionalEmail(email)) {
-            alert("Warning: Email is not an institutional email (@rtu.edu.ph).");
-            return;
-        }
-
-        alert("Login successful!");
-        window.location.href = "dashboard.html";
-    });
-        }
-    });
-</script>
-
-</body>
+      });
+    </script>
+  </body>
 </html>
