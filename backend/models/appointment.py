@@ -6,6 +6,7 @@ class Appointment(Base):
     __tablename__ = "appointments"
 
     appointment_id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
 
     patient_name = Column(String(100))
     service_id = Column(Integer, ForeignKey("services.service_id"))
