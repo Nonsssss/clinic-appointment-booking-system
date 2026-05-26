@@ -24,24 +24,18 @@ app.add_middleware(
 Base.metadata.create_all(bind=engine)
 
 app.include_router(auth_router, prefix="/auth")
-# FIX: removed /api prefix so frontend fetches to /appointments work as-is
 app.include_router(appointment_router)
 
 # --- FRONTEND PATHS ---
-# main.py lives in backend/, so __file__ gives us the backend dir
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
 FRONTEND_DIR = os.path.join(BACKEND_DIR, "frontend")
 HTML_DIR = os.path.join(FRONTEND_DIR, "html_files")
-CSS_DIR = os.path.join(FRONTEND_DIR, "css")
 
 # --- STATIC FILES ---
-# Serve CSS as /static/style.css  (matches <link href="/static/style.css">)
-app.mount("/static", StaticFiles(directory=CSS_DIR), name="static")
-
-# Serve images as /static/images/...  (after fixing HTML src attributes)
-IMAGES_DIR = os.path.join(FRONTEND_DIR, "images")
-if os.path.exists(IMAGES_DIR):
-    app.mount("/static/images", StaticFiles(directory=IMAGES_DIR), name="images")
+# Mount the entire frontend/ folder at /static/
+# /static/css/style.css        → frontend/css/style.css
+# /static/images/logo2.png     → frontend/images/logo2.png
+app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
 
 # --- HTML PAGE ROUTES ---
 def html(filename: str):

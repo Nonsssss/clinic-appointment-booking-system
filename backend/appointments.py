@@ -16,8 +16,10 @@ router = APIRouter(prefix="/appointments", tags=["appointments"])
 def parse_appointment_start(appointment_date: str, appointment_time: str):
     raw_datetime = f"{appointment_date} {appointment_time.strip()}"
     accepted_formats = [
-        "%Y-%m-%d %H:%M",
-        "%Y-%m-%d %I:%M %p"
+        "%Y-%m-%d %H:%M:%S",   # "2026-05-26 09:00:00"  ← from frontend convertTo24Hour
+        "%Y-%m-%d %H:%M",      # "2026-05-26 09:00"
+        "%Y-%m-%d %I:%M %p",   # "2026-05-26 9:00 AM"
+        "%Y-%m-%d %I:%M:%S %p" # "2026-05-26 9:00:00 AM"
     ]
     for date_format in accepted_formats:
         try:

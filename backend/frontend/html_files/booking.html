@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Book Appointment - HSU</title>
-    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/css/style.css" />
     <style>
       .date-time-container { display: flex; gap: 50px; align-items: flex-start; margin-top: 20px; }
       .calendar-section { display: flex; flex-direction: column; }
@@ -239,13 +239,16 @@
           const currentUserId = localStorage.getItem("user_id");
           if (!currentUserId) { alert("❌ Session Error: Please re-login."); return; }
 
+          // Convert to 24-hour format before sending so backend parse never fails
+          const time24 = convertTo24Hour(selectedTime); // e.g. "09:00:00"
+
           const payload = {
             fullname: fullnameInput.value,
             user_id: parseInt(currentUserId),
             service: selectedServiceName,
             service_id: serviceMap[selectedServiceName].id,
             appointment_date: dateInput.value,
-            appointment_time: selectedTime,
+            appointment_time: time24,
           };
 
           // FIX: use relative URL, not hardcoded localhost
