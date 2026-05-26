@@ -4,218 +4,89 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Book Appointment - HSU</title>
-
     <link rel="stylesheet" href="/static/style.css" />
-
     <style>
-
-    /* =========================
-       DATE + TIME SECTION
-    ========================= */
-
-      .date-time-container {
-        display: flex;
-        gap: 50px;
-        align-items: flex-start;
-        margin-top: 20px;
-      }
-
-      /* LEFT SIDE */
-      .calendar-section {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .calendar-section input[type="date"] {
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        font-size: 16px;
-        width: 250px;
-      }
-
-      /* RIGHT SIDE */
-      .time-section {
-        display: flex;
-        flex-direction: column;
-      }
-
-      /* TIME GRID */
-      .time-slots {
-        display: grid;
-        grid-template-columns: repeat(2, 120px);
-        gap: 12px;
-        max-height: 350px;
-        overflow-y: auto;
-        padding-right: 8px;
-        margin-top: 10px;
-      }
-
-      /* TIME BUTTON */
-      .time-slot {
-        padding: 12px;
-        border: none;
-        background: #d9d9d9;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 15px;
-        font-weight: 600;
-        transition: 0.2s ease;
-      }
-
-      .time-slot:hover {
-        background: #bfbfbf;
-      }
-
-      .time-slot.selected {
-        background: #007bff;
-        color: white;
-      }
-
-      /* SELECTED SERVICE */
-      .booking-service-card.selected {
-        border: 2px solid #007bff;
-        background: #eef5ff;
-      }
-
-      /* SCROLLBAR */
-      .time-slots::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      .time-slots::-webkit-scrollbar-thumb {
-        background: #bcbcbc;
-        border-radius: 10px;
-      }
+      .date-time-container { display: flex; gap: 50px; align-items: flex-start; margin-top: 20px; }
+      .calendar-section { display: flex; flex-direction: column; }
+      .calendar-section input[type="date"] { padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; width: 250px; }
+      .time-section { display: flex; flex-direction: column; }
+      .time-slots { display: grid; grid-template-columns: repeat(2, 120px); gap: 12px; max-height: 350px; overflow-y: auto; padding-right: 8px; margin-top: 10px; }
+      .time-slot { padding: 12px; border: none; background: #d9d9d9; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: 0.2s ease; }
+      .time-slot:hover { background: #bfbfbf; }
+      .time-slot.selected { background: #007bff; color: white; }
+      .booking-service-card.selected { border: 2px solid #007bff; background: #eef5ff; }
+      .time-slots::-webkit-scrollbar { width: 6px; }
+      .time-slots::-webkit-scrollbar-thumb { background: #bcbcbc; border-radius: 10px; }
     </style>
   </head>
-
   <body class="dashboard-page">
-    <!-- NAVBAR -->
     <nav class="navbar">
       <div class="nav-logo">
         <div class="logo-circle">
-          <img src="../images/logo2.png" alt="Logo" />
+          <img src="/static/images/logo2.png" alt="Logo" />
         </div>
-
         <span class="nav-title"> HSU APPOINTMENT BOOKING SYSTEM </span>
       </div>
-
       <ul class="nav-links">
-        <li>
-          <a href="dashboard.html"> Dashboard </a>
-        </li>
-
-        <li>
-          <a href="booking.html" class="nav-pill"> Book Appointment </a>
-        </li>
-
-        <li>
-          <a href="appointments.html"> My Appointments </a>
-        </li>
-
-        <li>
-          <a href="index.html" class="nav-logout"> Logout </a>
-        </li>
+        <li><a href="/dashboard"> Dashboard </a></li>
+        <li><a href="/booking" class="nav-pill"> Book Appointment </a></li>
+        <li><a href="/appointments-page"> My Appointments </a></li>
+        <li><a href="/" class="nav-logout"> Logout </a></li>
       </ul>
     </nav>
 
-    <!-- MAIN CONTAINER -->
     <div class="dashboard-container">
-      <a href="dashboard.html" class="back-link"> ← Select A Service </a>
-
+      <a href="/dashboard" class="back-link"> ← Select A Service </a>
       <hr class="divider" />
 
-      <!-- SERVICES -->
       <div class="booking-section">
         <h3 class="booking-subtitle">Available Services</h3>
-
         <div class="booking-services-grid">
-          <div class="booking-service-card" data-service-id="1">
-            <ion-icon name="medkit-outline"></ion-icon>
-            <p>Medical Consultation</p>
-          </div>
-
-          <div class="booking-service-card" data-service-id="5">
-            <ion-icon name="medical-outline"></ion-icon>
-            <p>Dental Consultation</p>
-          </div>
-
-          <div class="booking-service-card" data-service-id="2">
-            <ion-icon name="document-text-outline"></ion-icon>
-            <p>Medical Clearance for Freshmen</p>
-          </div>
-
-          <div class="booking-service-card" data-service-id="3">
-            <ion-icon name="briefcase-outline"></ion-icon>
-            <p>Medical Clearance for Internship</p>
-          </div>
-
-          <div class="booking-service-card" data-service-id="4">
-            <ion-icon name="trophy-outline"></ion-icon>
-            <p>Medical Clearance for U-Week</p>
-          </div>
+          <div class="booking-service-card" data-service-id="1"><ion-icon name="medkit-outline"></ion-icon><p>Medical Consultation</p></div>
+          <div class="booking-service-card" data-service-id="5"><ion-icon name="medical-outline"></ion-icon><p>Dental Consultation</p></div>
+          <div class="booking-service-card" data-service-id="2"><ion-icon name="document-text-outline"></ion-icon><p>Medical Clearance for Freshmen</p></div>
+          <div class="booking-service-card" data-service-id="3"><ion-icon name="briefcase-outline"></ion-icon><p>Medical Clearance for Internship</p></div>
+          <div class="booking-service-card" data-service-id="4"><ion-icon name="trophy-outline"></ion-icon><p>Medical Clearance for U-Week</p></div>
         </div>
       </div>
 
       <hr class="divider" />
 
-      <!-- PATIENT INFO -->
       <div class="booking-section">
         <h3 class="booking-subtitle">Patient Information</h3>
-
         <div class="patient-form">
           <div class="form-row">
             <div class="form-group">
               <label>Full Name</label>
-              <input
-                id="booking-fullname"
-                type="text"
-                placeholder="Enter your full name"
-                readonly
-              />
+              <input id="booking-fullname" type="text" placeholder="Enter your full name" readonly />
             </div>
-
             <div class="form-group">
               <label>Age</label>
               <input id="age" type="number" placeholder="Enter your age" />
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
               <label>Gender</label>
-
               <select>
                 <option value="">-- Select Gender --</option>
-
                 <option>Male</option>
                 <option>Female</option>
                 <option>Prefer not to say</option>
               </select>
             </div>
-
             <div class="form-group">
               <label>Contact Number</label>
               <input type="text" placeholder="Enter your contact number" />
             </div>
           </div>
-
           <div class="form-group">
             <label>Email</label>
-            <input
-              id="booking-email"
-              type="email"
-              placeholder="Enter your email"
-              readonly
-            />
+            <input id="booking-email" type="email" placeholder="Enter your email" readonly />
           </div>
-
           <div class="form-group">
             <label>Reason for Visit</label>
-
             <textarea placeholder="Briefly describe your concern"></textarea>
           </div>
         </div>
@@ -223,75 +94,43 @@
 
       <hr class="divider" />
 
-      <!-- DATE + TIME -->
       <div class="booking-section">
         <h3 class="booking-subtitle">Select Date and Time</h3>
-
         <div class="date-time-container">
-          <!-- LEFT SIDE -->
           <div class="calendar-section">
             <label>Select Date</label>
-
             <input type="date" id="appt-date" />
           </div>
-
-          <!-- RIGHT SIDE -->
           <div class="time-section">
             <label> Time (w/ 5 minutes increment) </label>
-
             <div id="timeSlots" class="time-slots"></div>
           </div>
         </div>
       </div>
 
-      <!-- ACTION BUTTONS -->
       <div class="booking-actions">
-        <a href="dashboard.html" class="btn btn-outline"> Cancel </a>
-
-        <button id="confirmBtn" class="btn btn-primary" type="button">
-          Confirm
-        </button>
+        <a href="/dashboard" class="btn btn-outline"> Cancel </a>
+        <button id="confirmBtn" class="btn btn-primary" type="button"> Confirm </button>
       </div>
     </div>
 
-    <!-- IONICONS -->
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <script>
       function convertTo24Hour(timeStr) {
         let [time, modifier] = timeStr.split(" ");
         let [hours, minutes] = time.split(":");
-
-        if (modifier === "PM" && hours !== "12") {
-          hours = parseInt(hours) + 12;
-        }
-        if (modifier === "AM" && hours === "12") {
-          hours = 0;
-        }
-
+        if (modifier === "PM" && hours !== "12") hours = parseInt(hours) + 12;
+        if (modifier === "AM" && hours === "12") hours = 0;
         return `${String(hours).padStart(2, "0")}:${minutes}:00`;
       }
 
       document.addEventListener("DOMContentLoaded", () => {
-        // =========================
-        // ELEMENTS
-        // =========================
         const serviceCards = document.querySelectorAll(".booking-service-card");
         const confirmBtn = document.getElementById("confirmBtn");
         const dateInput = document.getElementById("appt-date");
         const timeContainer = document.getElementById("timeSlots");
-        
-        const savedFullname = localStorage.getItem("fullname");
-        const savedEmail = localStorage.getItem("email");
-
         const fullnameInput = document.getElementById("booking-fullname");
         const emailInput = document.getElementById("booking-email");
 
@@ -303,22 +142,15 @@
           "Dental Consultation": { id: 5, duration: 20 },
         };
 
-        if (savedFullname && fullnameInput) {
-          fullnameInput.value = savedFullname;
-        }
+        const savedFullname = localStorage.getItem("fullname");
+        const savedEmail = localStorage.getItem("email");
+        if (savedFullname && fullnameInput) fullnameInput.value = savedFullname;
+        if (savedEmail && emailInput) emailInput.value = savedEmail;
 
-        if (savedEmail && emailInput) {
-          emailInput.value = savedEmail;
-        }
-
-        // =========================
-        // STATE
-        // =========================
         let selectedServiceName = null;
         let selectedTime = null;
         let bookedSlots = [];
 
-        // SERVICE SELECTION
         serviceCards.forEach((card) => {
           card.addEventListener("click", () => {
             serviceCards.forEach((c) => c.classList.remove("selected"));
@@ -328,39 +160,22 @@
           });
         });
 
-        // DATE LIMIT
         const today = new Date().toISOString().split("T")[0];
         dateInput.min = today;
         dateInput.addEventListener("change", fetchBookedSlots);
 
-        if (dateInput.value) {
-          fetchBookedSlots();
-        }
-
-        // =========================
-        // TIME SLOT GENERATION
-        // =========================
         function generateTimeSlots() {
           timeContainer.innerHTML = "";
-
           if (!selectedServiceName) {
             timeContainer.innerHTML = "<p style='color:#666; font-size:14px;'>Please select a service first.</p>";
             return;
           }
-
-          const currentService = serviceMap[selectedServiceName];
-          const neededDuration = currentService.duration;
-
-          let start = 8 * 60; // 8:00 AM
-          let end = 17 * 60;  // 5:00 PM
-
-          for (let i = start; i <= end; i += 5) {
+          const neededDuration = serviceMap[selectedServiceName].duration;
+          for (let i = 8 * 60; i <= 17 * 60; i += 5) {
             let hours = Math.floor(i / 60);
             let minutes = i % 60;
-
             let ampm = hours >= 12 ? "PM" : "AM";
             let displayHour = hours % 12 || 12;
-
             let timeStr = `${displayHour}:${minutes.toString().padStart(2, "0")} ${ampm}`;
 
             let btn = document.createElement("button");
@@ -369,7 +184,6 @@
 
             const now = new Date();
             const selectedDate = dateInput.value;
-
             if (selectedDate) {
               const slotDateTime = new Date(`${selectedDate}T${convertTo24Hour(timeStr)}`);
               if (selectedDate === now.toISOString().split("T")[0] && slotDateTime <= now) {
@@ -377,19 +191,14 @@
                 btn.style.opacity = 0.3;
                 btn.style.cursor = "not-allowed";
               }
-
-              const targetIsoStr = `${selectedDate}T${convertTo24Hour(timeStr)}`;
-              const potentialStart = new Date(targetIsoStr);
+              const potentialStart = new Date(`${selectedDate}T${convertTo24Hour(timeStr)}`);
               const potentialEnd = new Date(potentialStart.getTime() + neededDuration * 60000);
-
               const isUnavailable = bookedSlots.some((slot) => {
                 const slotStart = new Date(slot.start);
                 const slotEnd = new Date(slot.end);
-                const overlapCheck = potentialStart >= slotStart && potentialStart < slotEnd;
-                const spilloverCheck = potentialStart < slotStart && potentialEnd > slotStart;
-                return overlapCheck || spilloverCheck;
+                return (potentialStart >= slotStart && potentialStart < slotEnd) ||
+                       (potentialStart < slotStart && potentialEnd > slotStart);
               });
-
               if (isUnavailable) {
                 btn.disabled = true;
                 btn.style.opacity = 0.3;
@@ -403,7 +212,6 @@
               btn.classList.add("selected");
               selectedTime = timeStr;
             });
-
             timeContainer.appendChild(btn);
           }
         }
@@ -416,41 +224,20 @@
               const res = await fetch(`/appointments/availability/${serviceId}/${dateInput.value}`);
               const data = await res.json();
               bookedSlots = data.booked || [];
-            } catch (err) {
-              console.error(err);
-            }
+            } catch (err) { console.error(err); }
           }
           generateTimeSlots();
-        } // 👈 FIXED: This closing structural brace was missing!
+        }
 
-        // =========================
-        // BOOK APPOINTMENT
-        // =========================
         confirmBtn.addEventListener("click", async (e) => {
           e.preventDefault();
+          if (!selectedServiceName) { alert("⚠ Please select a service first."); return; }
+          if (!fullnameInput.value) { alert("Please enter your name"); return; }
+          if (!dateInput.value) { alert("⚠ Please select a date."); return; }
+          if (!selectedTime) { alert("⚠ Please select a time slot."); return; }
 
-          if (!selectedServiceName) {
-            alert("⚠ Please select a service first.");
-            return;
-          }
-          if (!fullnameInput.value) {
-            alert("Please enter your name");
-            return;
-          }
-          if (!dateInput.value) {
-            alert("⚠ Please select a date.");
-            return;
-          }
-          if (!selectedTime) {
-            alert("⚠ Please select a time slot.");
-            return;
-          }
-
-          const currentUserId = localStorage.getItem("user_id"); 
-          if (!currentUserId) {
-            alert("❌ Session Error: user_id not found in local storage. Please re-login.");
-            return;
-          }
+          const currentUserId = localStorage.getItem("user_id");
+          if (!currentUserId) { alert("❌ Session Error: Please re-login."); return; }
 
           const payload = {
             fullname: fullnameInput.value,
@@ -461,7 +248,8 @@
             appointment_time: selectedTime,
           };
 
-          fetch("http://127.0.0.1:8000/appointments", {
+          // FIX: use relative URL, not hardcoded localhost
+          fetch("/appointments", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
@@ -473,17 +261,13 @@
               }
               return res.json();
             })
-            .then((data) => {
+            .then(() => {
               alert("Appointment booked successfully!");
-              window.location.href = "dashboard.html";
+              window.location.href = "/dashboard";
             })
             .catch((err) => {
-              console.error("Booking failed details:", err);
-              if (err && err.detail) {
-                alert("❌ Booking failed: " + err.detail);
-              } else {
-                alert("❌ Booking failed: An unexpected error occurred.");
-              }
+              console.error("Booking failed:", err);
+              alert("❌ Booking failed: " + (err.detail || "An unexpected error occurred."));
             });
         });
       });

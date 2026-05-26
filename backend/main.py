@@ -6,17 +6,13 @@ from database.db import engine, Base, get_db
 from models.appointment import Appointment
 from schemas.appointment import AppointmentCreate
 from sqlalchemy.orm import Session
-
-# Route Imports
-from routes.auth import router as auth_router 
+from routes.auth import router as auth_router
 from appointments import router as appointment_router
-
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="HSU Appointment System")
 
-# CORS Middleware Configurations
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -25,34 +21,58 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Automatically create database tables if they don't exist
 Base.metadata.create_all(bind=engine)
 
-# Include Routers with explicit prefixes to match your frontend fetches
 app.include_router(auth_router, prefix="/auth")
-app.include_router(appointment_router, prefix="/api")
+# FIX: removed /api prefix so frontend fetches to /appointments work as-is
+app.include_router(appointment_router)
 
-# --- FRONTEND ASSET ROUTING SETUP ---
+# --- FRONTEND PATHS ---
+# main.py lives in backend/, so __file__ gives us the backend dir
+BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(BACKEND_DIR, "frontend")
+HTML_DIR = os.path.join(FRONTEND_DIR, "html_files")
+CSS_DIR = os.path.join(FRONTEND_DIR, "css")
 
-# Get current workspace directory (/app on Railway)
-CURRENT_WORKSPACE = os.getcwd() 
-FRONTEND_DIR = os.path.join(CURRENT_WORKSPACE, "frontend")
+# --- STATIC FILES ---
+# Serve CSS as /static/style.css  (matches <link href="/static/style.css">)
+app.mount("/static", StaticFiles(directory=CSS_DIR), name="static")
 
-INDEX_HTML_PATH = os.path.join(FRONTEND_DIR, "index.html")
-LOGIN_HTML_PATH = os.path.join(FRONTEND_DIR, "login.html")
+# Serve images as /static/images/...  (after fixing HTML src attributes)
+IMAGES_DIR = os.path.join(FRONTEND_DIR, "images")
+if os.path.exists(IMAGES_DIR):
+    app.mount("/static/images", StaticFiles(directory=IMAGES_DIR), name="images")
 
-# 1. Define explicit webpage endpoints first
-@app.get("/", response_class=FileResponse)
-def get_home_page():
-    if not os.path.exists(INDEX_HTML_PATH):
-        return {"error": f"index.html not found at {INDEX_HTML_PATH}"}
-    return INDEX_HTML_PATH
+# --- HTML PAGE ROUTES ---
+def html(filename: str):
+    path = os.path.join(HTML_DIR, filename)
+    if not os.path.exists(path):
+        return HTMLResponse(f"<h1>404 - {filename} not found</h1><p>Looked in: {path}</p>", status_code=404)
+    return FileResponse(path)
 
-@app.get("/login", response_class=FileResponse)
-def get_login_page():
-    if not os.path.exists(LOGIN_HTML_PATH):
-        return {"error": f"login.html not found at {LOGIN_HTML_PATH}"}
-    return LOGIN_HTML_PATH
+@app.get("/")
+def home():                         return html("index.html")
 
-# 2. Mount static folder at the very bottom as a fallback option for CSS/JS assets
-app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
+@app.get("/login")
+def login():                        return html("login.html")
+
+@app.get("/signup")
+def signup():                       return html("signup.html")
+
+@app.get("/dashboard")
+def dashboard():                    return html("dashboard.html")
+
+@app.get("/booking")
+def booking():                      return html("booking.html")
+
+@app.get("/appointments-page")
+def appointments_page():            return html("appointments.html")
+
+@app.get("/confirmation")
+def confirmation():                 return html("confirmation.html")
+
+@app.get("/admin")
+def admin():                        return html("admin-dashboard.html")
+
+@app.get("/admin/approved")
+def admin_approved():               return html("admin-approved.html")
