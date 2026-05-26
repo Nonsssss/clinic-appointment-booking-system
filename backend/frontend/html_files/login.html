@@ -7,76 +7,50 @@
     <title>HSU APPOINTMENT BOOKING SYSTEM</title>
     <link rel="stylesheet" href="/static/style.css" />
   </head>
-
   <body class="login-page">
     <nav class="navbar">
       <div class="nav-logo">
         <div class="logo-circle">
-          <img src="../images/logo2.png" alt="Logo" />
+          <img src="/static/images/logo2.png" alt="Logo" />
         </div>
         <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
       </div>
       <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="index.html#services">Services</a></li>
-        <li><a href="login.html" class="active">Login</a></li>
+        <li><a href="/">Home</a></li>
+        <li><a href="/#services">Services</a></li>
+        <li><a href="/login" class="active">Login</a></li>
       </ul>
     </nav>
 
     <div class="login-box">
       <form id="loginForm">
         <h2>Login</h2>
-
         <div class="input-box">
           <span class="icon"><ion-icon name="mail"></ion-icon></span>
-          <input
-            type="email"
-            id="email"
-            placeholder="Institutional Email"
-            required
-          />
+          <input type="email" id="email" placeholder="Institutional Email" required />
         </div>
         <small style="color: #666; font-size: 9px">
-          *Freshmen may use their personal Gmail email if RTU email is not yet
-          available.
+          *Freshmen may use their personal Gmail email if RTU email is not yet available.
         </small>
         <div class="input-box">
           <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-          <input
-            type="password"
-            id="password"
-            placeholder="Password"
-            required
-          />
+          <input type="password" id="password" placeholder="Password" required />
         </div>
-
         <div class="remember-forgot">
           <label><input type="checkbox" /> Remember me</label>
           <a href="#">Forgot Password?</a>
         </div>
-
-        <button
-          type="submit"
-          class="btn-login"
-          style="width: 100%; border: none; cursor: pointer"
-        >
+        <button type="submit" class="btn-login" style="width: 100%; border: none; cursor: pointer">
           Login
         </button>
-
         <div class="register-link">
-          <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+          <p>Don't have an account? <a href="/signup">Sign up</a></p>
         </div>
       </form>
     </div>
 
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
@@ -84,22 +58,21 @@
 
         if (loginForm) {
           loginForm.addEventListener("submit", async (e) => {
-            e.preventDefault(); // This officially blocks the browser redirect loop!
+            e.preventDefault();
 
             const email = document.getElementById("email").value.trim();
             const password = document.getElementById("password").value.trim();
 
             if (email === "hsu_admin@rtu.edu.ph" && password === "123456") {
               alert("Admin login successful!");
-              window.location.href = "admin-dashboard.html";
+              window.location.href = "/admin";
               return;
             }
+
             try {
               const response = await fetch("/auth/login", {
                 method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
               });
 
@@ -116,12 +89,10 @@
               localStorage.setItem("email", data.email);
 
               alert("🎉 Login successful!");
-              window.location.href = "dashboard.html";
+              window.location.href = "/dashboard";
             } catch (err) {
               console.error("Login communication error:", err);
-              alert(
-                "❌ Unable to reach the server. Make sure your FastAPI backend is running.",
-              );
+              alert("❌ Unable to reach the server.");
             }
           });
         }

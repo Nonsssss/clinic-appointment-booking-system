@@ -11,71 +11,43 @@
     <nav class="navbar">
       <div class="nav-logo">
         <div class="logo-circle">
-          <img src="../images/logo2.png" alt="Logo" />
+          <img src="/static/images/logo2.png" alt="Logo" />
         </div>
         <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
       </div>
       <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="index.html#services">Services</a></li>
-        <li><a href="login.html">Login</a></li>
+        <li><a href="/">Home</a></li>
+        <li><a href="/#services">Services</a></li>
+        <li><a href="/login">Login</a></li>
       </ul>
     </nav>
 
     <div class="login-box">
-      <!-- Changed to track submit directly -->
       <form id="signupForm">
         <h2>Sign Up</h2>
-
-        <!-- New Full Name Input Box to match backend models/user.py -->
         <div class="input-box">
           <span class="icon"><ion-icon name="person"></ion-icon></span>
           <input type="text" id="fullname" placeholder="Full Name" required />
         </div>
-
         <div class="input-box">
           <span class="icon"><ion-icon name="mail"></ion-icon></span>
-          <input
-            type="email"
-            id="email"
-            placeholder="Institutional Email"
-            required
-          />
+          <input type="email" id="email" placeholder="Institutional Email" required />
         </div>
-
         <div class="input-box">
           <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-          <input
-            type="password"
-            id="password"
-            placeholder="Password"
-            required
-          />
+          <input type="password" id="password" placeholder="Password" required />
         </div>
-
-        <!-- Real type="submit" so Enter key works natively -->
-        <button
-          type="submit"
-          class="btn-login"
-          style="width: 100%; border: none; cursor: pointer"
-        >
+        <button type="submit" class="btn-login" style="width: 100%; border: none; cursor: pointer">
           Sign Up
         </button>
-
         <div class="register-link">
-          <p>Already have an account? <a href="login.html">Login</a></p>
+          <p>Already have an account? <a href="/login">Login</a></p>
         </div>
       </form>
     </div>
 
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
@@ -92,29 +64,17 @@
             const email = emailInput.value.trim();
             const password = passwordInput.value.trim();
 
-            // 1. Validate all fields exist
             if (!fullname || !email || !password) {
               alert("⚠ Please fill in all fields.");
               return;
             }
 
-            const payload = {
-              fullname: fullname,
-              email: email,
-              password: password,
-            };
-
             try {
-              const response = await fetch(
-                "/auth/signup",
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                 body: JSON.stringify(payload),
-                },
-              );
+              const response = await fetch("/auth/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ fullname, email, password }),
+              });
 
               const data = await response.json();
 
@@ -123,19 +83,10 @@
               }
 
               alert("🎉 Registration successful! You can now log in.");
-              window.location.href = "login.html";
+              window.location.href = "/login";
             } catch (error) {
-              console.error("FULL BACKEND ERROR:", error); 
-
-              if (error.detail && typeof error.detail === "object") {
-                
-                const messages = error.detail
-                  .map((err) => `${err.loc.join(".")}: ${err.msg}`)
-                  .join("\n");
-                alert("❌ Signup Validation Error:\n" + messages);
-              } else {
-                alert("❌ Signup Error: " + (error.message || error));
-              }
+              console.error("Signup error:", error);
+              alert("❌ Signup Error: " + (error.message || error));
             }
           });
         }

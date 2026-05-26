@@ -11,40 +11,31 @@
     <nav class="navbar">
       <div class="nav-logo">
         <div class="logo-circle">
-          <img src="../images/logo2.png" alt="Logo" />
+          <img src="/static/images/logo2.png" alt="Logo" />
         </div>
         <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
       </div>
       <ul class="nav-links">
-        <li><a href="dashboard.html" class="nav-pill">Dashboard</a></li>
-        <li><a href="booking.html">Book Appointment</a></li>
-        <li><a href="appointments.html">My Appointments</a></li>
-        <li><a href="index.html" class="nav-logout">Logout</a></li>
+        <li><a href="/dashboard" class="nav-pill">Dashboard</a></li>
+        <li><a href="/booking">Book Appointment</a></li>
+        <li><a href="/appointments-page">My Appointments</a></li>
+        <li><a href="/" class="nav-logout">Logout</a></li>
       </ul>
     </nav>
 
     <div class="dashboard-container">
       <div class="user-welcome">
         <div class="user-avatar">
-          <img src="../images/logo4.png" alt="Avatar" />
+          <img src="/static/images/logo4.png" alt="Avatar" />
         </div>
-        <h2 id="welcome-text">Good Morning, <span id="student-name">Mingyu</span>! 🔔</h2>
+        <h2 id="welcome-text">Good Morning, <span id="student-name"></span>!</h2>
       </div>
 
       <hr class="divider" />
 
       <div class="dashboard-section">
         <h3>Upcoming Appointment</h3>
-        <div class="appointment-cards">
-          <div class="appt-card">
-            <p class="appt-date">May 18, 2026</p>
-            <p class="appt-time">9:00 AM</p>
-            <p class="appt-service">Medical Consultation</p>
-            <p class="appt-status-label">Status:</p>
-            <span class="badge pending">Pending</span>
-          </div>
-          <div class="appt-card empty"></div>
-        </div>
+        <div class="appointment-cards"></div>
       </div>
 
       <hr class="divider" />
@@ -52,77 +43,43 @@
       <div class="dashboard-section">
         <h3>Available Services:</h3>
         <div class="service-pills">
-          <a href="booking.html" class="service-pill">Medical Consultation</a>
-          <a href="booking.html" class="service-pill">Dental Consultation</a>
-          <a href="booking.html" class="service-pill"
-            >Medical Clearance for Freshmen</a
-          >
-          <a href="booking.html" class="service-pill"
-            >Medical Clearance for Internship</a
-          >
-          <a href="booking.html" class="service-pill"
-            >Medical Clearance for U-Week</a
-          >
+          <a href="/booking" class="service-pill">Medical Consultation</a>
+          <a href="/booking" class="service-pill">Dental Consultation</a>
+          <a href="/booking" class="service-pill">Medical Clearance for Freshmen</a>
+          <a href="/booking" class="service-pill">Medical Clearance for Internship</a>
+          <a href="/booking" class="service-pill">Medical Clearance for U-Week</a>
         </div>
       </div>
     </div>
 
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <script>
       document.addEventListener("DOMContentLoaded", async () => {
-        let greeting = "Good Morning"; // Default na bati
-        
-        
-        // 1. DYNAMIC USERNAME MATCHING
         const studentNameElement = document.getElementById("student-name");
-
-        // Retrieve the text payload saved during login
         const storedName = localStorage.getItem("fullname");
         const userId = localStorage.getItem("user_id");
 
-        // Security Gate: Kick unauthorized users back to login if no metadata exists
         if (!userId) {
           alert("🔒 Session expired or invalid. Please log in.");
-          window.location.href = "login.html";
+          window.location.href = "/login";
           return;
         }
 
-        if (storedName) {
-       
-          studentNameElement.textContent = storedName;
-        }
+        if (storedName) studentNameElement.textContent = storedName;
+
         const currentHour = new Date().getHours();
-        
+        let greeting = "Good Morning";
+        if (currentHour >= 12 && currentHour < 18) greeting = "Good Afternoon";
+        else if (currentHour >= 18 || currentHour < 5) greeting = "Good Evening";
 
-    
-        if (currentHour >= 12 && currentHour < 18) {
-          greeting = "Good Afternoon";
-        } else if (currentHour >= 18 || currentHour < 5) {
-          greeting = "Good Evening";
-        }
+        document.getElementById("welcome-text").innerText = `${greeting}, ${storedName}!`;
 
-        
-        const welcomeTextElement = document.getElementById("welcome-text");
-        if (welcomeTextElement) {
-          welcomeTextElement.innerText = `${greeting}, ${storedName}!`;
-        }
-
-        // 2. APPOINTMENT CARDS LOAD
         const container = document.querySelector(".appointment-cards");
 
         try {
-          // Pass the logged-in user's ID as a query parameter or header so they only see THEIR data
-          const res = await fetch(
-            `/appointments?user_id=${userId}`,
-          );
+          const res = await fetch(`/appointments?user_id=${userId}`);
           const appointments = await res.json();
 
           container.innerHTML = "";
@@ -135,33 +92,22 @@
           appointments.forEach((app) => {
             const card = document.createElement("div");
             card.classList.add("appt-card");
-
             card.innerHTML = `
-                <p class="appt-date">${app.date}</p>
-                <p class="appt-time">${app.time}</p>
-                <p class="appt-service">${app.service}</p>
-                <span class="badge ${app.status}">${app.status}</span>
+              <p class="appt-date">${app.date}</p>
+              <p class="appt-time">${app.time}</p>
+              <p class="appt-service">${app.service}</p>
+              <span class="badge ${(app.status || '').toLowerCase()}">${app.status}</span>
             `;
-
             container.appendChild(card);
           });
         } catch (err) {
           console.error("Error loading appointments:", err);
         }
 
-        // SERVICE CLICK ALERTS
-        document.querySelectorAll(".service-pill").forEach((service) => {
-          service.addEventListener("click", () => {
-            alert("You selected: " + service.textContent);
-          });
-        });
-
-        // LOGOUT (Cleans the local cache entirely)
         document.querySelector(".nav-logout").addEventListener("click", (e) => {
           e.preventDefault();
-          localStorage.clear(); // Wipes fullname and user_id safely
-          alert("Logged out!");
-          window.location.href = "login.html";
+          localStorage.clear();
+          window.location.href = "/";
         });
       });
     </script>

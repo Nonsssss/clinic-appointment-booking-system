@@ -4,49 +4,28 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>My Appointments - HSU</title>
-
     <link rel="stylesheet" href="/static/style.css" />
   </head>
-
-<body class="dashboard-page">
-
-    <!-- NAVBAR -->
+  <body class="dashboard-page">
     <nav class="navbar">
       <div class="nav-logo">
         <div class="logo-circle">
-          <img src="../images/logo2.png" alt="Logo" />
+          <img src="/static/images/logo2.png" alt="Logo" />
         </div>
-
-        <span class="nav-title"> HSU APPOINTMENT BOOKING SYSTEM </span>
+        <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
       </div>
-
       <ul class="nav-links">
-        <li>
-          <a href="dashboard.html"> Dashboard </a>
-        </li>
-
-        <li>
-          <a href="booking.html"> Book Appointment </a>
-        </li>
-
-        <li>
-          <a href="appointments.html" class="nav-pill"> My Appointments </a>
-        </li>
-
-        <li>
-          <a href="index.html" class="nav-logout"> Logout </a>
-        </li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/booking">Book Appointment</a></li>
+        <li><a href="/appointments-page" class="nav-pill">My Appointments</a></li>
+        <li><a href="/" class="nav-logout">Logout</a></li>
       </ul>
     </nav>
 
     <div class="dashboard-container">
       <h3 class="booking-subtitle">APPOINTMENT HISTORY</h3>
-
       <hr class="divider" />
-
-      <!-- TABLE -->
       <div class="appointments-table-container">
         <table class="appointments-table">
           <thead>
@@ -58,59 +37,33 @@
               <th>Status</th>
             </tr>
           </thead>
-
-          <!-- DYNAMIC CONTENT -->
           <tbody id="appointmentHistory"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- IONICONS -->
-    <script type="module"
-    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js">
-    </script>
-
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <script>
-
-    
-    // LOAD APPOINTMENTS
-    
-    document.addEventListener("DOMContentLoaded", async () => {
-
-        // TABLE BODY
+      document.addEventListener("DOMContentLoaded", async () => {
         const appointmentContainer = document.getElementById("appointmentHistory");
-        const userId = localStorage.getItem("user_id"); 
+        const userId = localStorage.getItem("user_id");
         appointmentContainer.innerHTML = "";
 
         try {
-          const response = await fetch(
-            `/appointments?user_id=${userId}`,
-          );
+          const response = await fetch(`/appointments?user_id=${userId}`);
           const appointments = await response.json();
 
           if (appointments.length === 0) {
             appointmentContainer.innerHTML = `
-              <tr>
-                <td colspan="5" style="text-align:center;padding:30px;">
-                  No appointments yet.
-                </td>
-              </tr>
-            `;
+              <tr><td colspan="5" style="text-align:center;padding:30px;">No appointments yet.</td></tr>`;
             return;
           }
 
-          // DISPLAY APPOINTMENTS
           appointments.forEach((app) => {
             const row = document.createElement("tr");
-
-            // Normalize status to lowercase for safe CSS class mapping
             const statusClass = app.status ? app.status.toLowerCase() : "pending";
-
             row.innerHTML = `
               <td>${app.patient_name}</td>
               <td>${app.service}</td>
@@ -118,19 +71,14 @@
               <td>${app.time}</td>
               <td><span class="badge ${statusClass}">${app.status}</span></td>
             `;
-
             appointmentContainer.appendChild(row);
           });
-          
         } catch (err) {
           console.error("Error loading appointments:", err);
           appointmentContainer.innerHTML = `
-            <tr>
-              <td colspan="5" style="text-align:center; padding:30px; color: red;">
-                Failed to load appointments. Please ensure your backend is running.
-              </td>
-            </tr>
-          `;
+            <tr><td colspan="5" style="text-align:center; padding:30px; color: red;">
+              Failed to load appointments.
+            </td></tr>`;
         }
       });
     </script>
