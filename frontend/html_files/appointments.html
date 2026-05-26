@@ -14,7 +14,6 @@
 
 <body class="dashboard-page">
 
-    <!-- NAVBAR -->
     <nav class="navbar">
 
         <div class="nav-logo">
@@ -59,7 +58,6 @@
 
     </nav>
 
-    <!-- MAIN -->
     <div class="dashboard-container">
 
         <h3 class="booking-subtitle">
@@ -93,7 +91,6 @@
 
     </div>
 
-    <!-- IONICONS -->
     <script type="module"
     src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js">
     </script>
@@ -102,12 +99,9 @@
     src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
     </script>
 
-    <!-- JS -->
     <script>
 
-    // =========================
     // LOAD APPOINTMENTS
-    // =========================
     document.addEventListener("DOMContentLoaded", () => {
 
         // TABLE BODY
@@ -121,9 +115,7 @@
         // CLEAR DEFAULT CONTENT
         appointmentContainer.innerHTML = "";
 
-        // =========================
         // NO APPOINTMENTS
-        // =========================
         if (appointments.length === 0) {
 
             appointmentContainer.innerHTML = `
@@ -142,9 +134,7 @@
             return;
         }
 
-        // =========================
         // DISPLAY APPOINTMENTS
-        // =========================
         appointments.forEach(appointment => {
 
             let badgeClass = "";

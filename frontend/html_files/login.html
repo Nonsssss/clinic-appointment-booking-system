@@ -58,7 +58,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <script>
-document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
 
     const loginBtn = document.querySelector(".btn-login");
     const inputs = document.querySelectorAll(".input-box input");
@@ -72,26 +72,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (loginBtn) {
-        loginBtn.addEventListener("click", function () {
+    loginBtn.addEventListener("click", function () {
 
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
+        event.preventDefault();
 
-            if (!email || !password) {
-                alert("Please fill in all fields.");
-            }
-            else if (!isValidInstitutionalEmail(email)) {
-                alert("Warning: Email is not an institutional email (@rtu.edu.ph).");
-            }
-            else {
-                alert("Login successful!");
-            }
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
 
-            window.location.href = "dashboard.html";
-        });
-    }
+        if (!email || !password) {
+            alert("Please fill in all fields.");
+            return;
+        }
 
-});
+        if (email === "hsu_admin@rtu.edu.ph" && password === "123456") {
+            alert("Admin login successful!");
+            window.location.href = "admin-dashboard.html";
+            return; 
+        }
+
+        if (!isValidInstitutionalEmail(email)) {
+            alert("Warning: Email is not an institutional email (@rtu.edu.ph).");
+            return;
+        }
+
+        alert("Login successful!");
+        window.location.href = "dashboard.html";
+    });
+        }
+    });
 </script>
 
 </body>

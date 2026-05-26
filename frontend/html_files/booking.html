@@ -11,9 +11,7 @@
 
     <style>
 
-    /* =========================
-       DATE + TIME SECTION
-    ========================= */
+    /* DATE + TIME SECTION */
 
     .date-time-container {
         display: flex;
@@ -314,14 +312,11 @@
     src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
     </script>
 
-    <!-- JS -->
     <script>
 
     document.addEventListener("DOMContentLoaded", () => {
 
-        // =========================
         // SERVICE SELECTION
-        // =========================
         const serviceCards =
         document.querySelectorAll(".booking-service-card");
 
@@ -344,9 +339,7 @@
 
         });
 
-        // =========================
         // DATE LIMIT
-        // =========================
         const dateInput =
         document.getElementById("appt-date");
 
@@ -355,9 +348,7 @@
 
         dateInput.min = today;
 
-        // =========================
         // TIME SLOT GENERATOR
-        // =========================
         const timeContainer =
         document.getElementById("timeSlots");
 
@@ -416,9 +407,7 @@
 
         generateTimeSlots();
 
-        // =========================
         // BOOK APPOINTMENT
-        // =========================
         document.querySelector(".btn-primary")
         .addEventListener("click", (e) => {
 

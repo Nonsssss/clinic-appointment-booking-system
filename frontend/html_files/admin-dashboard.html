@@ -7,69 +7,173 @@
     <title>Admin Dashboard - HSU</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body class="dashboard-page">
 
-  <nav class="navbar">
+<nav class="navbar">
     <div class="nav-logo">
-      <div class="logo-circle">
-        <img src="../images/logo2.png" alt="Logo">
-      </div>
-      <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
+        <div class="logo-circle">
+            <img src="../images/logo2.png" alt="Logo">
+        </div>
+        <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
     </div>
+
     <ul class="nav-links">
-      <li><a href="admin-dashboard.html" class="nav-pill">Appointment Requests</a></li>
-      <li><a href="admin-approved.html">Approved Appointments</a></li>
-      <li><a href="index.html" class="nav-logout">Logout</a></li>
+        <li><a href="admin-dashboard.html">Appointment Requests</a></li>
+        <li><a href="admin-approved.html">Approved Appointments</a></li>
+        <li><a href="index.html" class="nav-logout">Logout</a></li>
     </ul>
-  </nav>
+</nav>
 
-  <div class="dashboard-container">
+<div class="dashboard-container">
     <div class="admin-section">
-      <h3 class="booking-subtitle">APPOINTMENT REQUESTS</h3>
-      <hr class="divider">
-      <div class="appointments-table-container">
-        <table class="appointments-table">
-         <thead>
-    <tr>
-        <th>Student Name</th>
-        <th>Service</th>
-        <th style="text-align: center;">Date</th>
-        <th style="text-align: center;">Time</th>
-        <th style="text-align: center;">Status</th>
-        <th style="text-align: center;">Action</th>
-    </tr>
-</thead>
-          <tbody id="requests-body">
-           <tr>
-    <td>Mingyu</td>
-    <td>Medical Consultation</td>
-    <td style="text-align: center;">May 18, 2026</td>
-    <td style="text-align: center;">9:00 AM</td>
-    <td style="text-align: center;"><span class="badge pending">Pending</span></td>
-    <td style="text-align: center;">
-        <button class="btn-approve">Approve</button>
-        <button class="btn-reject">Reject</button>
-    </td>
-</tr>
-<tr>
-    <td>Hoshi</td>
-    <td>Dental Consultation</td>
-    <td style="text-align: center;">May 19, 2026</td>
-    <td style="text-align: center;">10:00 AM</td>
-    <td style="text-align: center;"><span class="badge pending">Pending</span></td>
-    <td style="text-align: center;">
-        <button class="btn-approve">Approve</button>
-        <button class="btn-reject">Reject</button>
-    </td>
-</tr>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
-  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+        <h3 class="booking-subtitle">APPOINTMENT REQUESTS</h3>
+        <hr class="divider">
+
+        <div class="appointments-table-container">
+            <table class="appointments-table">
+
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Service</th>
+                        <th style="text-align:center;">Date</th>
+                        <th style="text-align:center;">Time</th>
+                        <th style="text-align:center;">Status</th>
+                        <th style="text-align:center;">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="requests-body"></tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+let pendingAppointments =
+    JSON.parse(localStorage.getItem("pendingAppointments")) || [];
+
+let processedAppointments =
+    JSON.parse(localStorage.getItem("processedAppointments")) || [];
+
+   //LOGOUT
+
+document.querySelector(".nav-logout").addEventListener("click", () => {
+    localStorage.removeItem("userRole");
+});
+
+//RENDER TABLE
+
+function renderTable() {
+    const tableBody = document.getElementById("requests-body");
+    tableBody.innerHTML = "";
+
+    if (pendingAppointments.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align:center; padding:20px;">
+                    No pending appointment requests.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    pendingAppointments.forEach((app, index) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${app.name}</td>
+            <td>${app.service}</td>
+            <td style="text-align:center;">${app.date}</td>
+            <td style="text-align:center;">${app.time}</td>
+            <td style="text-align:center;">
+                <span class="badge pending">Pending</span>
+            </td>
+            <td style="text-align:center;">
+                <button class="btn-approve">Approve</button>
+                <button class="btn-reject">Reject</button>
+            </td>
+        `;
+
+        row.querySelector(".btn-approve").onclick = () =>
+            processAppointment(index, "Approved");
+
+        row.querySelector(".btn-reject").onclick = () =>
+            processAppointment(index, "Rejected");
+
+        tableBody.appendChild(row);
+    });
+}
+
+//PROCESS APPOINTMENT
+
+function processAppointment(index, status) {
+
+    const appointment = pendingAppointments[index];
+
+    processedAppointments.push({
+        ...appointment,
+        status
+    });
+
+    localStorage.setItem(
+        "processedAppointments",
+        JSON.stringify(processedAppointments)
+    );
+
+    pendingAppointments.splice(index, 1);
+
+    localStorage.setItem(
+        "pendingAppointments",
+        JSON.stringify(pendingAppointments)
+    );
+
+    renderTable();
+}
+
+//Sorting and Filtering
+let sortDirection = {};
+
+document.querySelectorAll(".appointments-table th").forEach((th, index) => {
+    if (index >= 4) return;
+
+    th.style.cursor = "pointer";
+
+    const arrow = document.createElement("span");
+    arrow.textContent = " ⬍";
+    th.appendChild(arrow);
+
+    th.addEventListener("click", () => sortTable(index));
+});
+
+function sortTable(columnIndex) {
+
+    sortDirection[columnIndex] = !sortDirection[columnIndex];
+
+    pendingAppointments.sort((a, b) => {
+
+        let valA = Object.values(a)[columnIndex];
+        let valB = Object.values(b)[columnIndex];
+
+        return sortDirection[columnIndex]
+            ? valA.localeCompare(valB)
+            : valB.localeCompare(valA);
+    });
+
+    renderTable();
+}
+
+//INIT
+
+renderTable();
+
+</script>
+
 </body>
 </html>
