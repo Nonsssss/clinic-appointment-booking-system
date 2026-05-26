@@ -1,179 +1,245 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - HSU</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
 
-<body class="dashboard-page">
-
-<nav class="navbar">
-    <div class="nav-logo">
+  <body class="dashboard-page">
+    <nav class="navbar">
+      <div class="nav-logo">
         <div class="logo-circle">
-            <img src="../images/logo2.png" alt="Logo">
+          <img src="../images/logo2.png" alt="Logo" />
         </div>
         <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
-    </div>
+      </div>
 
-    <ul class="nav-links">
-        <li><a href="admin-dashboard.html">Appointment Requests</a></li>
+      <ul class="nav-links">
+        <li>
+          <a href="admin-dashboard.html" class="nav-pill"
+            >Appointment Requests</a
+          >
+        </li>
         <li><a href="admin-approved.html">Approved Appointments</a></li>
         <li><a href="index.html" class="nav-logout">Logout</a></li>
-    </ul>
-</nav>
+      </ul>
+    </nav>
 
-<div class="dashboard-container">
-    <div class="admin-section">
-
+    <div class="dashboard-container">
+      <div class="admin-section">
         <h3 class="booking-subtitle">APPOINTMENT REQUESTS</h3>
-        <hr class="divider">
+        <hr class="divider" />
 
         <div class="appointments-table-container">
-            <table class="appointments-table">
+          <table class="appointments-table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Service</th>
+                <th style="text-align: center">Date</th>
+                <th style="text-align: center">Time</th>
+                <th style="text-align: center">Status</th>
+                <th style="text-align: center">Action</th>
+              </tr>
+            </thead>
 
-                <thead>
-                    <tr>
-                        <th>Student Name</th>
-                        <th>Service</th>
-                        <th style="text-align:center;">Date</th>
-                        <th style="text-align:center;">Time</th>
-                        <th style="text-align:center;">Status</th>
-                        <th style="text-align:center;">Action</th>
-                    </tr>
-                </thead>
-
-                <tbody id="requests-body"></tbody>
-
-            </table>
+            <tbody id="requests-body"></tbody>
+          </table>
         </div>
-
+      </div>
     </div>
-</div>
 
-<script>
+    <script>
+      //LOGOUT
 
-let pendingAppointments =
-    JSON.parse(localStorage.getItem("pendingAppointments")) || [];
+      document.querySelector(".nav-logout").addEventListener("click", () => {
+        localStorage.removeItem("userRole");
+      });
 
-let processedAppointments =
-    JSON.parse(localStorage.getItem("processedAppointments")) || [];
+      let pendingAppointments = [];
 
-   //LOGOUT
+      // FETCH PENDING REQUESTS FROM BACKEND
+      async function fetchPendingRequests() {
+        try {
+          const response = await fetch(
+            "http://127.0.0.1:8000/appointments?status=pending",
+          );
+          if (!response.ok)
+            throw new Error("Failed to fetch data from database.");
 
-document.querySelector(".nav-logout").addEventListener("click", () => {
-    localStorage.removeItem("userRole");
-});
-
-//RENDER TABLE
-
-function renderTable() {
-    const tableBody = document.getElementById("requests-body");
-    tableBody.innerHTML = "";
-
-    if (pendingAppointments.length === 0) {
-        tableBody.innerHTML = `
+          pendingAppointments = await response.json();
+          renderTable();
+        } catch (err) {
+          console.error("Database connection error:", err);
+          document.getElementById("requests-body").innerHTML = `
             <tr>
-                <td colspan="6" style="text-align:center; padding:20px;">
-                    No pending appointment requests.
+                <td colspan="6" style="text-align:center; padding:20px; color: red; font-weight: bold;">
+                    Error: Unable to load data from server database.
                 </td>
             </tr>
-        `;
-        return;
-    }
+          `;
+        }
+      }
 
-    pendingAppointments.forEach((app, index) => {
-        const row = document.createElement("tr");
+      // SEND UPDATE STATUS QUERY TO BACKEND DATABASE
+      async function processAppointment(appointmentId, status, buttonElement) {
+        if (!appointmentId) {
+          alert("❌ Error: Appointment ID is undefined. Cannot update record.");
+          return;
+        }
 
-        row.innerHTML = `
-            <td>${app.name}</td>
-            <td>${app.service}</td>
-            <td style="text-align:center;">${app.date}</td>
-            <td style="text-align:center;">${app.time}</td>
-            <td style="text-align:center;">
-                <span class="badge pending">Pending</span>
+        try {
+          console.log(
+            `Attempting to update appointment #${appointmentId} to ${status}`,
+          );
+
+          const response = await fetch(
+            `http://127.0.0.1:8000/appointments/${appointmentId}/status`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ status: status }),
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.detail || "Could not update state.");
+          }
+
+          // 1. Remove from the local tracking array
+          pendingAppointments = pendingAppointments.filter((app) => {
+            const dbId = app.appointment_id || app.id;
+            return String(dbId) !== String(appointmentId);
+          });
+
+          // 2. DOM FORCE REMOVAL: Find the closest <tr> element to the clicked button and vaporize it
+          if (buttonElement) {
+            const rowElement = buttonElement.closest("tr");
+            if (rowElement) {
+              rowElement.remove();
+              console.log(`DOM Row #${appointmentId} removed successfully.`);
+            }
+          }
+
+          alert(`Appointment successfully marked as ${status}!`);
+
+          // 3. If that was the last row, show the "No pending requests" empty state notice
+          const tableBody = document.getElementById("requests-body");
+          if (tableBody.children.length === 0) {
+            tableBody.innerHTML = `
+        <tr>
+            <td colspan="6" style="text-align:center; padding:20px;">
+                No pending appointment requests.
             </td>
-            <td style="text-align:center;">
-                <button class="btn-approve">Approve</button>
-                <button class="btn-reject">Reject</button>
-            </td>
-        `;
+        </tr>
+      `;
+          }
+        } catch (err) {
+          console.error("Failed updating appointment status:", err);
+          alert("❌ Error syncing state with server: " + err.message);
+        }
+      }
 
-        row.querySelector(".btn-approve").onclick = () =>
-            processAppointment(index, "Approved");
+      // RENDER TABLE DYNAMICALLY
+      function renderTable() {
+        const tableBody = document.getElementById("requests-body");
+        tableBody.innerHTML = "";
 
-        row.querySelector(".btn-reject").onclick = () =>
-            processAppointment(index, "Rejected");
+        if (pendingAppointments.length === 0) {
+          tableBody.innerHTML = `
+      <tr>
+          <td colspan="6" style="text-align:center; padding:20px;">
+              No pending appointment requests.
+          </td>
+      </tr>
+    `;
+          return;
+        }
 
-        tableBody.appendChild(row);
-    });
-}
+        pendingAppointments.forEach((app) => {
+          const status = app.status || "Pending";
 
-//PROCESS APPOINTMENT
+          // ✅ FIX: Use === for strict comparison, or compare case-insensitively
+          if (status.toLowerCase() === "pending") {
+            const row = document.createElement("tr");
 
-function processAppointment(index, status) {
+            const dbId = app.appointment_id || app.id;
+            const studentName =
+              app.patient_name || app.fullname || "Unknown Student";
+            const appDate = app.date || app.appointment_date || "N/A";
+            const appTime = app.time || app.appointment_time || "N/A";
 
-    const appointment = pendingAppointments[index];
+            row.innerHTML = `
+        <td>${studentName}</td>
+        <td>${app.service}</td>
+        <td style="text-align:center;">${appDate}</td>
+        <td style="text-align:center;">${appTime}</td>
+        <td style="text-align:center;">
+            <span class="badge pending">Pending</span>
+        </td>
+        <td style="text-align:center;">
+            <button class="btn-approve">Approve</button>
+            <button class="btn-reject">Reject</button>
+        </td>
+      `;
 
-    processedAppointments.push({
-        ...appointment,
-        status
-    });
+            // Pass 'this' so the button context can target the row DOM element for immediate removal
+            row.querySelector(".btn-approve").onclick = function () {
+              processAppointment(dbId, "Approved", this);
+            };
+            row.querySelector(".btn-reject").onclick = function () {
+              processAppointment(dbId, "Rejected", this);
+            };
 
-    localStorage.setItem(
-        "processedAppointments",
-        JSON.stringify(processedAppointments)
-    );
+            tableBody.appendChild(row);
+          }
+        });
+      }
+      // SORTING ALGORITHM
+      let sortDirection = {};
+      document
+        .querySelectorAll(".appointments-table th")
+        .forEach((th, index) => {
+          if (index >= 4) return;
+          th.style.cursor = "pointer";
+          const arrow = document.createElement("span");
+          arrow.textContent = " ⬍";
+          th.appendChild(arrow);
+          th.addEventListener("click", () => sortTable(index));
+        });
 
-    pendingAppointments.splice(index, 1);
+      function sortTable(columnIndex) {
+        sortDirection[columnIndex] = !sortDirection[columnIndex];
 
-    localStorage.setItem(
-        "pendingAppointments",
-        JSON.stringify(pendingAppointments)
-    );
+        const dataKeys = ["patient_name", "service", "date", "time"];
+        const backupKeys = [
+          "fullname",
+          "service",
+          "appointment_date",
+          "appointment_time",
+        ];
 
-    renderTable();
-}
+        const targetKey = dataKeys[columnIndex];
+        const fallbackKey = backupKeys[columnIndex];
 
-//Sorting and Filtering
-let sortDirection = {};
+        pendingAppointments.sort((a, b) => {
+          let valA = (a[targetKey] || a[fallbackKey] || "").toString();
+          let valB = (b[targetKey] || b[fallbackKey] || "").toString();
 
-document.querySelectorAll(".appointments-table th").forEach((th, index) => {
-    if (index >= 4) return;
-
-    th.style.cursor = "pointer";
-
-    const arrow = document.createElement("span");
-    arrow.textContent = " ⬍";
-    th.appendChild(arrow);
-
-    th.addEventListener("click", () => sortTable(index));
-});
-
-function sortTable(columnIndex) {
-
-    sortDirection[columnIndex] = !sortDirection[columnIndex];
-
-    pendingAppointments.sort((a, b) => {
-
-        let valA = Object.values(a)[columnIndex];
-        let valB = Object.values(b)[columnIndex];
-
-        return sortDirection[columnIndex]
+          return sortDirection[columnIndex]
             ? valA.localeCompare(valB)
             : valB.localeCompare(valA);
-    });
+        });
+        renderTable();
+      }
 
-    renderTable();
-}
-
-//INIT
-
-renderTable();
-
-</script>
-
-</body>
+      // INITIAL STARTUP FETCH RUN
+      fetchPendingRequests();
+    </script>
+  </body>
 </html>

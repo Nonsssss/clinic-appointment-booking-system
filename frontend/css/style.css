@@ -569,7 +569,11 @@ body {
     color: #0f5132;
 }
 
-
+.badge.rejected, .badge.Rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
 .service-pills {
     display: flex;
     flex-wrap: wrap;

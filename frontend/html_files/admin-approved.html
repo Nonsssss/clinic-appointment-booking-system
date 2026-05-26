@@ -1,406 +1,284 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Approved Appointments - HSU</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body class="dashboard-page">
-
-  <nav class="navbar">
-    <div class="nav-logo">
-      <div class="logo-circle">
-        <img src="../images/logo2.png" alt="Logo">
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body class="dashboard-page">
+    <nav class="navbar">
+      <div class="nav-logo">
+        <div class="logo-circle">
+          <img src="../images/logo2.png" alt="Logo" />
+        </div>
+        <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
       </div>
-      <span class="nav-title">HSU APPOINTMENT BOOKING SYSTEM</span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="admin-dashboard.html">Appointment Requests</a></li>
-      <li><a href="admin-approved.html" class="nav-pill">Approved Appointments</a></li>
-      <li><a href="index.html" class="nav-logout">Logout</a></li>
-    </ul>
-  </nav>
+      <ul class="nav-links">
+        <li><a href="admin-dashboard.html">Appointment Requests</a></li>
+        <li>
+          <a href="admin-approved.html" class="nav-pill"
+            >Approved Appointments</a
+          >
+        </li>
+        <li><a href="index.html" class="nav-logout">Logout</a></li>
+      </ul>
+    </nav>
 
-  <div class="dashboard-container">
-    <div class="admin-section">
-      <h3 class="booking-subtitle">APPROVED APPOINTMENTS</h3>
-      <hr class="divider">
-      <div class="appointments-table-container">
-        <table class="appointments-table">
-          <thead>
-            <tr>
-              <th>Student Name</th>
-              <th>Service</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="approved-body">
-            <tr>
-              <td>Mingyu</td>
-              <td>Medical Consultation</td>
-              <td>May 15, 2026</td>
-              <td>9:00 AM</td>
-              <td><span class="badge done">Approved</span></td>
-            </tr>
-            <tr>
-              <td>Hoshi</td>
-              <td>Dental Consultation</td>
-              <td>May 16, 2026</td>
-              <td>2:00 PM</td>
-              <td><span class="badge done">Approved</span></td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="dashboard-container">
+      <div class="admin-section">
+        <h3 class="booking-subtitle">APPROVED APPOINTMENTS</h3>
+        <hr class="divider" />
+        <div class="appointments-table-container">
+          <table class="appointments-table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Service</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="approved-body">
+              <tr>
+                <td>Mingyu</td>
+                <td>Medical Consultation</td>
+                <td>May 15, 2026</td>
+                <td>9:00 AM</td>
+                <td><span class="badge done">Approved</span></td>
+              </tr>
+              <tr>
+                <td>Hoshi</td>
+                <td>Dental Consultation</td>
+                <td>May 16, 2026</td>
+                <td>2:00 PM</td>
+                <td><span class="badge done">Approved</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
 
-  <script>
-    // LOGOUT
+    <script>
+      // LOGOUT
 
-    const logoutBtn =
-        document.querySelector(".nav-logout");
+      const logoutBtn = document.querySelector(".nav-logout");
 
-    if (logoutBtn) {
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+          localStorage.removeItem("userRole");
+        });
+      }
 
-        logoutBtn.addEventListener(
-            "click",
-            function () {
+      // SORT VARIABLES
 
-                localStorage.removeItem(
-                    "userRole"
-                );
-            }
-        );
-    }
+      let historyAppointments = [];
+      let sortDirection = {};
+      let currentStatusFilter = "All";
 
-    // SORT VARIABLES
+      const tableBody = document.getElementById("approved-body");
 
-    let sortDirection = {};
+      // DYNAMIC TABLE FETCH CONNECTION
+      async function fetchAppointmentHistory() {
+        try {
+          // Fetch everything from your existing endpoint without restricting by status parameters
+          const response = await fetch("http://127.0.0.1:8000/appointments");
+          if (!response.ok)
+            throw new Error("Could not load data from database.");
 
-    let currentStatusFilter = "All";
+          const allAppointments = await response.json();
 
-    // LOAD PROCESSED APPOINTMENTS
+          // Filter out "pending" states so only true historical logs ("Approved", "Rejected") display
+          historyAppointments = allAppointments.filter((app) => {
+            const status = (app.status || "").toLowerCase();
+            return status !== "pending";
+          });
 
-    const processedAppointments =
-        JSON.parse(
-            localStorage.getItem(
-                "processedAppointments"
-            )
-        ) || [];
+          renderTable(historyAppointments);
+        } catch (err) {
+          console.error("Database connection failure:", err);
+          tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align:center; padding:20px; color: red; font-weight: bold;">
+                        Error: Unable to load history records from server database.
+                    </td>
+                </tr>
+            `;
+        }
+      }
 
-    const tableBody =
-        document.getElementById(
-            "approved-body"
-        );
-
-    // ADD DROPDOWN ARROWS
-    const headers =
-        document.querySelectorAll(
-            ".appointments-table th"
-        );
-
-    headers.forEach((header, index) => {
-
-        // Status column
+      // HEADERS INITIALIZATION MANAGEMENT
+      const headers = document.querySelectorAll(".appointments-table th");
+      headers.forEach((header, index) => {
+        // Handle Status Filter Dropdown on Column Index 4
         if (index === 4) {
-
-            const arrow =
-                document.createElement("span");
-
-            arrow.id = "status-arrow";
-
-            arrow.textContent = " ▼";
-
-            header.appendChild(arrow);
-
-            header.style.cursor = "pointer";
-
-            header.addEventListener(
-                "click",
-                filterStatus
-            );
-
-            return;
+          const arrow = document.createElement("span");
+          arrow.id = "status-arrow";
+          arrow.textContent = " ▼";
+          header.appendChild(arrow);
+          header.style.cursor = "pointer";
+          header.addEventListener("click", filterStatus);
+          return;
         }
 
-        const arrow =
-            document.createElement("span");
-
+        const arrow = document.createElement("span");
         arrow.id = `arrow-${index}`;
-
         arrow.textContent = " ⬍";
-
         header.appendChild(arrow);
-
         header.style.cursor = "pointer";
+        header.addEventListener("click", function () {
+          sortTable(index);
+        });
+      });
 
-        header.addEventListener(
-            "click",
-            function () {
-
-                sortTable(index);
-            }
-        );
-    });
-
-    // EMPTY BY DEFAULT
-
-    if (processedAppointments.length === 0) {
-
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="5"
-                    style="
-                        text-align:center;
-                        padding:20px;
-                    ">
-                    No processed appointments yet.
-                </td>
-            </tr>
-        `;
-
-    } else {
-
-        renderTable(processedAppointments);
-    }
-
-    // RENDER TABLE
-
-    function renderTable(data) {
-
+      // RENDER TABLE DYNAMICALLY
+      function renderTable(data) {
         tableBody.innerHTML = "";
 
-        data.forEach(app => {
-
-            const row = `
-                <tr>
-
-                    <td>
-                        ${app.name}
-                    </td>
-
-                    <td>
-                        ${app.service}
-                    </td>
-
-                    <td style="text-align:center;">
-                        ${app.date}
-                    </td>
-
-                    <td style="text-align:center;">
-                        ${app.time}
-                    </td>
-
-                    <td style="text-align:center;">
-
-                        <span class="badge ${
-                            app.status === "Approved"
-                                ? "approved"
-                                : "rejected"
-                        }">
-
-                            ${app.status}
-
-                        </span>
-
-                    </td>
-
-                </tr>
-            `;
-
-            tableBody.innerHTML += row;
-        });
-
-        // Empty state
         if (data.length === 0) {
-
-            tableBody.innerHTML = `
+          tableBody.innerHTML = `
                 <tr>
-                    <td colspan="5"
-                        style="
-                            text-align:center;
-                            padding:20px;
-                        ">
-                        No appointments found.
+                    <td colspan="5" style="text-align:center; padding:20px;">
+                        No historical records found matching filter criteria.
                     </td>
                 </tr>
             `;
+          return;
         }
-    }
 
-    // SORT TABLE
+        data.forEach((app) => {
+          const studentName =
+            app.patient_name || app.fullname || "Unknown Student";
+          const appDate = app.date || app.appointment_date || "N/A";
+          const appTime = app.time || app.appointment_time || "N/A";
+          const status = app.status || "Approved";
 
-    function sortTable(columnIndex) {
+          const row = `
+                <tr>
+                    <td>${studentName}</td>
+                    <td>${app.service}</td>
+                    <td style="text-align:center;">${appDate}</td>
+                    <td style="text-align:center;">${appTime}</td>
+                    <td style="text-align:center;">
+                        <span class="badge ${status.toLowerCase()}">${status}</span>
+                    </td>
+                </tr>
+            `;
+          tableBody.innerHTML += row;
+        });
+      }
 
-        sortDirection[columnIndex] =
-            !sortDirection[columnIndex];
+      // MULTI-COLUMN CLIENT SORTING ENGINE
+      function sortTable(columnIndex) {
+        sortDirection[columnIndex] = !sortDirection[columnIndex];
 
-        const sorted =
-            [...processedAppointments];
+        const sorted = [...historyAppointments];
 
         sorted.sort((a, b) => {
+          const nameA = a.patient_name || a.fullname || "";
+          const nameB = b.patient_name || b.fullname || "";
+          const dateA = a.date || a.appointment_date || "";
+          const dateB = b.date || b.appointment_date || "";
+          const timeA = a.time || a.appointment_time || "";
+          const timeB = b.time || b.appointment_time || "";
 
-            let valuesA = [
-                a.name,
-                a.service,
-                a.date,
-                a.time
-            ];
+          let valuesA = [nameA, a.service, dateA, timeA];
+          let valuesB = [nameB, b.service, dateB, timeB];
 
-            let valuesB = [
-                b.name,
-                b.service,
-                b.date,
-                b.time
-            ];
+          let valueA = valuesA[columnIndex];
+          let valueB = valuesB[columnIndex];
 
-            let valueA =
-                valuesA[columnIndex];
-
-            let valueB =
-                valuesB[columnIndex];
-
-            // DATE SORT
-            if (columnIndex === 2) {
-
-                return sortDirection[columnIndex]
-                    ? new Date(valueA)
-                      - new Date(valueB)
-                    : new Date(valueB)
-                      - new Date(valueA);
-            }
-
-            // TIME SORT
-            if (columnIndex === 3) {
-
-                return sortDirection[columnIndex]
-                    ? convertTime(valueA)
-                      - convertTime(valueB)
-                    : convertTime(valueB)
-                      - convertTime(valueA);
-            }
-
-            // TEXT SORT
+          if (columnIndex === 2) {
+            // Date string sorting normalization
             return sortDirection[columnIndex]
-                ? valueA.localeCompare(valueB)
-                : valueB.localeCompare(valueA);
+              ? new Date(valueA) - new Date(valueB)
+              : new Date(valueB) - new Date(valueA);
+          }
+
+          if (columnIndex === 3) {
+            // Time string sorting normalization
+            return sortDirection[columnIndex]
+              ? convertTime(valueA) - convertTime(valueB)
+              : convertTime(valueB) - convertTime(valueA);
+          }
+
+          return sortDirection[columnIndex]
+            ? valueA.toString().localeCompare(valueB.toString())
+            : valueB.toString().localeCompare(valueA.toString());
         });
 
         renderTable(sorted);
-
         updateArrows(columnIndex);
-    }
+      }
 
-    // TIME CONVERTER
+      // AM/PM TIME INTERPRETER UTILITY
+      function convertTime(timeStr) {
+        if (!timeStr || timeStr === "N/A") return 0;
+        try {
+          const [time, modifier] = timeStr.split(" ");
+          let [hours, minutes] = time.split(":").map(Number);
 
-    function convertTime(timeStr) {
+          if (modifier === "PM" && hours !== 12) hours += 12;
+          if (modifier === "AM" && hours === 12) hours = 0;
 
-        const [time, modifier] =
-            timeStr.split(" ");
+          return hours * 60 + minutes;
+        } catch (e) {
+          return 0;
+        }
+      }
 
-        let [hours, minutes] =
-            time.split(":").map(Number);
+      // UPDATE SORT ARROWS LOOKS
+      function updateArrows(columnIndex) {
+        document.querySelectorAll("th span").forEach((span) => {
+          if (span.id !== "status-arrow") {
+            span.textContent = " ⬍";
+          }
+        });
 
-        if (
-            modifier === "PM"
-            && hours !== 12
-        ) {
-            hours += 12;
+        document.getElementById(`arrow-${columnIndex}`).textContent =
+          sortDirection[columnIndex] ? " ⬆️" : " ⬇️";
+      }
+
+      // CYCLE STATUS FILTERS (All ➔ Approved ➔ Rejected)
+      function filterStatus() {
+        if (currentStatusFilter === "All") {
+          currentStatusFilter = "Approved";
+        } else if (currentStatusFilter === "Approved") {
+          currentStatusFilter = "Rejected";
+        } else {
+          currentStatusFilter = "All";
         }
 
-        if (
-            modifier === "AM"
-            && hours === 12
-        ) {
-            hours = 0;
-        }
+        let filtered = [...historyAppointments];
 
-        return hours * 60 + minutes;
-    }
-
-    // UPDATE SORT ARROWS
-
-    function updateArrows(columnIndex) {
-
-        document.querySelectorAll("th span")
-            .forEach(span => {
-
-                if (
-                    span.id !== "status-arrow"
-                ) {
-                    span.textContent = " ⬍";
-                }
-            });
-
-        document.getElementById(
-            `arrow-${columnIndex}`
-        ).textContent =
-            sortDirection[columnIndex]
-                ? " ⬆️"
-                : " ⬇️";
-    }
-
-    // FILTER STATUS
-
-    function filterStatus() {
-
-        if (
-            currentStatusFilter === "All"
-        ) {
-
-            currentStatusFilter =
-                "Approved";
-        }
-
-        else if (
-            currentStatusFilter === "Approved"
-        ) {
-
-            currentStatusFilter =
-                "Rejected";
-        }
-
-        else {
-
-            currentStatusFilter =
-                "All";
-        }
-
-        let filtered =
-            [...processedAppointments];
-
-        if (
-            currentStatusFilter !== "All"
-        ) {
-
-            filtered =
-                filtered.filter(app =>
-
-                    app.status ===
-                    currentStatusFilter
-                );
+        if (currentStatusFilter !== "All") {
+          filtered = filtered.filter(
+            (app) =>
+              (app.status || "").toLowerCase() ===
+              currentStatusFilter.toLowerCase(),
+          );
         }
 
         renderTable(filtered);
 
-        document.getElementById(
-            "status-arrow"
-        ).textContent =
+        document.getElementById("status-arrow").textContent =
+          currentStatusFilter === "All" ? " ▼" : ` (${currentStatusFilter})`;
+      }
 
-            currentStatusFilter === "All"
-                ? " ▼"
-                : ` ${currentStatusFilter}`;
-    }
-
-  </script>
-
-</body>
+      // RUN THE INITIAL PIPELINE
+      fetchAppointmentHistory();
+    </script>
+  </body>
 </html>

@@ -80,22 +80,23 @@
     // =========================
     // LOAD APPOINTMENTS
     // =========================
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
 
         // TABLE BODY
-        const appointmentContainer =
-          document.getElementById("appointmentHistory");
-        const userId = localStorage.getItem("user_id"); // temporary test user
+        const appointmentContainer = document.getElementById("appointmentHistory");
+        const userId = localStorage.getItem("user_id"); 
         appointmentContainer.innerHTML = "";
 
-        // =========================
-        // NO APPOINTMENTS
-        // =========================
-        if (appointments.length === 0) {
+        try {
+          const response = await fetch(
+            `http://127.0.0.1:8000/appointments?user_id=${userId}`,
+          );
+          const appointments = await response.json();
 
+          if (appointments.length === 0) {
             appointmentContainer.innerHTML = `
               <tr>
-                <td colspan="4" style="text-align:center;padding:30px;">
+                <td colspan="5" style="text-align:center;padding:30px;">
                   No appointments yet.
                 </td>
               </tr>
@@ -103,43 +104,29 @@
             return;
           }
 
-        // =========================
-        // DISPLAY APPOINTMENTS
-        // =========================
-        appointments.forEach(appointment => {
-
-            let badgeClass = "";
-
-            // STATUS DESIGN
-            if (appointment.status === "Pending") {
-                badgeClass = "pending";
-            }
-
-            if (appointment.status === "Completed") {
-                badgeClass = "done";
-            }
-
-            // CREATE TABLE ROW
+          // DISPLAY APPOINTMENTS
+          appointments.forEach((app) => {
             const row = document.createElement("tr");
 
-            // 3. Updated keys to mirror our clean backend:
-            // app.service gives the readable text name instead of a raw number ID!
-            // app.time gives our nicely formatted 12-hour string (e.g., 09:00 AM)
+            // Normalize status to lowercase for safe CSS class mapping
+            const statusClass = app.status ? app.status.toLowerCase() : "pending";
+
             row.innerHTML = `
               <td>${app.patient_name}</td>
               <td>${app.service}</td>
               <td>${app.date}</td>
               <td>${app.time}</td>
-              <td><span class="badge ${app.status.toLowerCase()}">${app.status}</span></td>
+              <td><span class="badge ${statusClass}">${app.status}</span></td>
             `;
 
             appointmentContainer.appendChild(row);
           });
+          
         } catch (err) {
           console.error("Error loading appointments:", err);
           appointmentContainer.innerHTML = `
             <tr>
-              <td colspan="4" style="text-align:center; padding:30px; color: red;">
+              <td colspan="5" style="text-align:center; padding:30px; color: red;">
                 Failed to load appointments. Please ensure your backend is running.
               </td>
             </tr>

@@ -310,60 +310,49 @@
         if (savedEmail && emailInput) {
           emailInput.value = savedEmail;
         }
+
         // =========================
         // STATE
         // =========================
         let selectedServiceName = null;
         let selectedTime = null;
+        let bookedSlots = [];
 
         // SERVICE SELECTION
-        // =========================
-       
-
         serviceCards.forEach((card) => {
           card.addEventListener("click", () => {
             serviceCards.forEach((c) => c.classList.remove("selected"));
             card.classList.add("selected");
-
             selectedServiceName = card.querySelector("p").innerText;
-
-            fetchBookedSlots(); // IMPORTANT
+            fetchBookedSlots();
           });
         });
 
         // DATE LIMIT
-        // =========================
-        
-
-        const today =
-        new Date().toISOString().split("T")[0];
-
+        const today = new Date().toISOString().split("T")[0];
         dateInput.min = today;
         dateInput.addEventListener("change", fetchBookedSlots);
 
-        // If a date is preset on load, render slots automatically
         if (dateInput.value) {
           fetchBookedSlots();
         }
+
         // =========================
         // TIME SLOT GENERATION
         // =========================
-        let bookedSlots = [];
         function generateTimeSlots() {
           timeContainer.innerHTML = "";
 
           if (!selectedServiceName) {
-            timeContainer.innerHTML =
-              "<p style='color:#666; font-size:14px;'>Please select a service first.</p>";
+            timeContainer.innerHTML = "<p style='color:#666; font-size:14px;'>Please select a service first.</p>";
             return;
           }
 
-          // Get the current selected service rules
           const currentService = serviceMap[selectedServiceName];
-          const neededDuration = currentService.duration; // 5, 15, or 20 minutes
+          const neededDuration = currentService.duration;
 
           let start = 8 * 60; // 8:00 AM
-          let end = 17 * 60; // 5:00 PM
+          let end = 17 * 60;  // 5:00 PM
 
           for (let i = start; i <= end; i += 5) {
             let hours = Math.floor(i / 60);
@@ -381,56 +370,36 @@
             const now = new Date();
             const selectedDate = dateInput.value;
 
-            const slotDateTime = new Date(
-              `${selectedDate}T${convertTo24Hour(timeStr)}`,
-            );
+            if (selectedDate) {
+              const slotDateTime = new Date(`${selectedDate}T${convertTo24Hour(timeStr)}`);
+              if (selectedDate === now.toISOString().split("T")[0] && slotDateTime <= now) {
+                btn.disabled = true;
+                btn.style.opacity = 0.3;
+                btn.style.cursor = "not-allowed";
+              }
 
-            // Disable past times if selected date is today
-            if (
-              selectedDate === now.toISOString().split("T")[0] &&
-              slotDateTime <= now
-            ) {
-              btn.disabled = true;
-              btn.style.opacity = 0.3;
-              btn.style.cursor = "not-allowed";
-            }
+              const targetIsoStr = `${selectedDate}T${convertTo24Hour(timeStr)}`;
+              const potentialStart = new Date(targetIsoStr);
+              const potentialEnd = new Date(potentialStart.getTime() + neededDuration * 60000);
 
-            // Compute potential appointment window for this specific button
-            const targetIsoStr = `${dateInput.value}T${convertTo24Hour(timeStr)}`;
-            const potentialStart = new Date(targetIsoStr);
-            const potentialEnd = new Date(
-              potentialStart.getTime() + neededDuration * 60000,
-            );
+              const isUnavailable = bookedSlots.some((slot) => {
+                const slotStart = new Date(slot.start);
+                const slotEnd = new Date(slot.end);
+                const overlapCheck = potentialStart >= slotStart && potentialStart < slotEnd;
+                const spilloverCheck = potentialStart < slotStart && potentialEnd > slotStart;
+                return overlapCheck || spilloverCheck;
+              });
 
-            // Double check validation loop against every existing reservation
-            const isUnavailable = bookedSlots.some((slot) => {
-              const slotStart = new Date(slot.start);
-              const slotEnd = new Date(slot.end);
-
-              // 1. Is the doctor already seeing someone at this exact minute?
-              const overlapCheck =
-                potentialStart >= slotStart && potentialStart < slotEnd;
-
-              // 2. Will this appointment spill over into a future booking?
-              const spilloverCheck =
-                potentialStart < slotStart && potentialEnd > slotStart;
-
-              return overlapCheck || spilloverCheck;
-            });
-
-            if (isUnavailable) {
-              btn.disabled = true;
-              btn.style.opacity = 0.3;
-              btn.style.cursor = "not-allowed";
+              if (isUnavailable) {
+                btn.disabled = true;
+                btn.style.opacity = 0.3;
+                btn.style.cursor = "not-allowed";
+              }
             }
 
             btn.addEventListener("click", () => {
               if (btn.disabled) return;
-
-              document
-                .querySelectorAll(".time-slot")
-                .forEach((b) => b.classList.remove("selected"));
-
+              document.querySelectorAll(".time-slot").forEach((b) => b.classList.remove("selected"));
               btn.classList.add("selected");
               selectedTime = timeStr;
             });
@@ -441,23 +410,18 @@
 
         async function fetchBookedSlots() {
           bookedSlots = [];
-
           if (dateInput.value && selectedServiceName) {
             const serviceId = serviceMap[selectedServiceName].id;
-
             try {
-              const res = await fetch(
-                `http://127.0.0.1:8000/appointments/availability/${serviceId}/${dateInput.value}`,
-              );
-
+              const res = await fetch(`http://127.0.0.1:8000/appointments/availability/${serviceId}/${dateInput.value}`);
               const data = await res.json();
               bookedSlots = data.booked || [];
             } catch (err) {
               console.error(err);
             }
           }
-
-        generateTimeSlots();
+          generateTimeSlots();
+        } // 👈 FIXED: This closing structural brace was missing!
 
         // =========================
         // BOOK APPOINTMENT
@@ -469,17 +433,14 @@
             alert("⚠ Please select a service first.");
             return;
           }
-
           if (!fullnameInput.value) {
             alert("Please enter your name");
             return;
           }
-
           if (!dateInput.value) {
             alert("⚠ Please select a date.");
             return;
           }
-
           if (!selectedTime) {
             alert("⚠ Please select a time slot.");
             return;
@@ -499,32 +460,25 @@
             appointment_date: dateInput.value,
             appointment_time: selectedTime,
           };
+
           fetch("http://127.0.0.1:8000/appointments", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           })
             .then(async (res) => {
-              // Check if backend returned an error status (like 400 Bad Request)
               if (!res.ok) {
-                const errorData = await res
-                  .json()
-                  .catch(() => ({ detail: "Unknown server error" }));
-                // 👈 CRITICAL: This breaks the chain completely and jumps straight to .catch()
+                const errorData = await res.json().catch(() => ({ detail: "Unknown server error" }));
                 return Promise.reject(errorData);
               }
-              return res.json(); // If everything is fine, proceed to success
+              return res.json();
             })
             .then((data) => {
-              // This will ONLY run if res.ok was TRUE
               alert("Appointment booked successfully!");
               window.location.href = "dashboard.html";
             })
             .catch((err) => {
-              // This catches the Promise.reject() from above
               console.error("Booking failed details:", err);
-
-              // Display the exact message sent by your FastAPI backend ("Clinic is occupied...")
               if (err && err.detail) {
                 alert("❌ Booking failed: " + err.detail);
               } else {
