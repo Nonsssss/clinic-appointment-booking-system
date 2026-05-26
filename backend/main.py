@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from routes.auth import router as auth_router # Use this alias cleanly!
 from appointments import router as appointment_router
 from fastapi.responses import FileResponse
-
+import os
 
 app = FastAPI(title="HSU Appointment System")
 
