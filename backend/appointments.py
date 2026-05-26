@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import BaseModel
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from typing import Optional, List
@@ -16,10 +15,10 @@ router = APIRouter(prefix="/appointments", tags=["appointments"])
 def parse_appointment_start(appointment_date: str, appointment_time: str):
     raw_datetime = f"{appointment_date} {appointment_time.strip()}"
     accepted_formats = [
-        "%Y-%m-%d %H:%M:%S",   # "2026-05-26 09:00:00"  ← from frontend convertTo24Hour
-        "%Y-%m-%d %H:%M",      # "2026-05-26 09:00"
-        "%Y-%m-%d %I:%M %p",   # "2026-05-26 9:00 AM"
-        "%Y-%m-%d %I:%M:%S %p" # "2026-05-26 9:00:00 AM"
+        "%Y-%m-%d %H:%M:%S",    # "2026-05-26 09:00:00"  ← from frontend convertTo24Hour
+        "%Y-%m-%d %H:%M",       # "2026-05-26 09:00"
+        "%Y-%m-%d %I:%M %p",    # "2026-05-26 9:00 AM"
+        "%Y-%m-%d %I:%M:%S %p"  # "2026-05-26 9:00:00 AM"
     ]
     for date_format in accepted_formats:
         try:
@@ -28,12 +27,11 @@ def parse_appointment_start(appointment_date: str, appointment_time: str):
             continue
     raise HTTPException(
         status_code=400,
-        detail="Invalid date or time format. Use YYYY-MM-DD with HH:MM or h:mm AM/PM"
+        detail=f"Invalid date or time format received: '{raw_datetime}'"
     )
 
 
 def serialize_appointment(app: AppointmentModel) -> dict:
-    """Single place to turn a DB row into a JSON-safe dict."""
     service_name = app.service.service_name if app.service else "Unknown Service"
     return {
         "appointment_id": app.appointment_id,
@@ -56,13 +54,10 @@ def list_appointments(
     db: Session = Depends(get_db)
 ):
     query = db.query(AppointmentModel)
-
     if user_id is not None:
         query = query.filter(AppointmentModel.user_id == user_id)
-
     if status is not None:
         query = query.filter(AppointmentModel.status.ilike(status))
-
     appointments = query.all()
     return [serialize_appointment(a) for a in appointments]
 
@@ -87,6 +82,9 @@ def get_availability(service_id: int, date: str, db: Session = Depends(get_db)):
 
     booked_slots = []
     for appt in booked:
+        # Skip rows with NULL times to avoid crashes on bad/legacy data
+        if not appt.start_time or not appt.end_time:
+            continue
         start = datetime.combine(appt.appointment_date, appt.start_time)
         end = datetime.combine(appt.appointment_date, appt.end_time)
         booked_slots.append({"start": start.isoformat(), "end": end.isoformat()})
@@ -136,6 +134,9 @@ def create_appointment(payload: AppointmentCreate, db: Session = Depends(get_db)
     ).all()
 
     for existing in existing_appointments:
+        # Skip rows with NULL times to avoid crashes
+        if not existing.start_time or not existing.end_time:
+            continue
         existing_start = datetime.combine(existing.appointment_date, existing.start_time)
         existing_end = datetime.combine(existing.appointment_date, existing.end_time)
         if start_datetime < existing_end and end_datetime > existing_start:
