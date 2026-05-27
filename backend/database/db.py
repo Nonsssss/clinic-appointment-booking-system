@@ -14,7 +14,7 @@ DB_PORT = os.getenv("MYSQLPORT", "3306")
 DB_NAME = os.getenv("MYSQLDATABASE")
 
 
-DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 print(f"🔌 Connecting to database host: {DB_HOST}")
 
