@@ -119,14 +119,16 @@
             card.classList.add("appt-card");
 
             // Safely extract status inside the loop context
-            const currentStatus = item.status || "Pending";
-
-            card.innerHTML = `
-    <p class="appt-date">${item.date || item.appointment_date || "N/A"}</p>
-    <p class="appt-time">${item.time || item.appointment_time || "N/A"}</p>
-    <p class="appt-service">${item.service || "General"}</p>
-    <span class="badge ${currentStatus.toLowerCase()}">${currentStatus}</span>
-  `;
+            const currentStatus = item.status || "pending";
+            if(currentStatus = "pending" || "Pending"){
+              card.innerHTML = `
+            <p class="appt-date">${item.date || item.appointment_date || "N/A"}</p>
+            <p class="appt-time">${item.time || item.appointment_time || "N/A"}</p>
+            <p class="appt-service">${item.service || "General"}</p>
+            <span class="badge ${currentStatus.toLowerCase()}">${currentStatus}</span>
+            `;
+            }
+            
             container.appendChild(card);
           });
         } catch (err) {

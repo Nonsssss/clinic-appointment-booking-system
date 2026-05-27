@@ -129,6 +129,20 @@ def create_appointment(payload: AppointmentCreate, db: Session = Depends(get_db)
     if start_datetime < datetime.now():
         raise HTTPException(status_code=400, detail="Cannot book an appointment in the past")
 
+    user_same_day_appointment = db.query(AppointmentModel).filter(
+        AppointmentModel.user_id == payload.user_id,
+        AppointmentModel.appointment_date == start_datetime.date(),
+        AppointmentModel.status.notin_(["Rejected", "rejected"]) # Let them rebook if previous attempt was Rejected
+    ).first()
+
+    if user_same_day_appointment:
+        raise HTTPException(
+            status_code=400,
+            detail=f"You already have an appointment scheduled for {start_datetime.strftime('%B %d, %Y')}."
+        )
+
+
+
     existing_appointments = db.query(AppointmentModel).filter(
         AppointmentModel.appointment_date == start_datetime.date()
     ).all()
