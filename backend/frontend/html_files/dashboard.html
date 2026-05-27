@@ -90,7 +90,7 @@
             container.innerHTML = `<div class="appt-card"><p>No upcoming appointments.</p></div>`;
             return;
           }
-          const status = app.status || "Pending";
+          const status = app.status || "pending";
           appointments.forEach((app) => {
            const card = document.createElement("div");
             card.classList.add("appt-card");
