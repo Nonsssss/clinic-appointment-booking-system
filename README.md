@@ -93,7 +93,7 @@ The following matrix tracks QA test scenarios, identifying critical compliance o
 
 ## Contributors
 *Backend*
- ### [** Toring, Mhark Ellie**] (https://github.com/ellr4)
+ ### [**Toring, Mhark Ellie**] (https://github.com/ellr4)
  ### [**Puna, Mitchelclaren**]  (https://github.com/MitchelclarenPuna)
 ---
 *Frontend*
