@@ -7,16 +7,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DB_USER = os.getenv("MYSQLUSER")
-DB_PASSWORD = os.getenv("MYSQLPASSWORD")
-DB_HOST = os.getenv("MYSQLHOST")
-DB_PORT = os.getenv("MYSQLPORT", "3306")
-DB_NAME = os.getenv("MYSQLDATABASE")
-
-
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-print(f"🔌 Connecting to database host: {DB_HOST}")
+
+if DATABASE_URL and DATABASE_URL.startswith("mysql://"):
+    DATABASE_URL = DATABASE_URL.replace("mysql://", "mysql+pymysql://", 1)
+    
+    if not DATABASE_URL:
+        raise ValueError("DATABASE_URL environment variable is missing!")
+
 
 
 engine = create_engine(
