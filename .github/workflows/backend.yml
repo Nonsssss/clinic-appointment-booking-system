@@ -88,7 +88,9 @@ jobs:
         run: |
           cd backend
           python -c "import main; print('FastAPI app imports OK')"
-        
+      
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli   
 
       - name: Deploy to Railway
         run: railway deploy --detach
