@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard - HSU Appointment Booking</title>
-    <link rel="icon" type="image/x-icon" href="/static/images/logo2.png">
-  
+    <link rel="icon" type="image/x-icon" href="/static/images/logo2.png" />
+
     <link rel="stylesheet" href="/static/css/style.css" />
   </head>
   <body class="dashboard-page">
@@ -30,7 +30,9 @@
         <div class="user-avatar">
           <img src="/static/images/logo4.png" alt="Avatar" />
         </div>
-        <h2 id="welcome-text">Good Morning, <span id="student-name"></span>!</h2>
+        <h2 id="welcome-text">
+          Good Morning, <span id="student-name"></span>!
+        </h2>
       </div>
 
       <hr class="divider" />
@@ -47,15 +49,27 @@
         <div class="service-pills">
           <a href="/booking" class="service-pill">Medical Consultation</a>
           <a href="/booking" class="service-pill">Dental Consultation</a>
-          <a href="/booking" class="service-pill">Medical Clearance for Freshmen</a>
-          <a href="/booking" class="service-pill">Medical Clearance for Internship</a>
-          <a href="/booking" class="service-pill">Medical Clearance for U-Week</a>
+          <a href="/booking" class="service-pill"
+            >Medical Clearance for Freshmen</a
+          >
+          <a href="/booking" class="service-pill"
+            >Medical Clearance for Internship</a
+          >
+          <a href="/booking" class="service-pill"
+            >Medical Clearance for U-Week</a
+          >
         </div>
       </div>
     </div>
 
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
 
     <script>
       document.addEventListener("DOMContentLoaded", async () => {
@@ -74,9 +88,11 @@
         const currentHour = new Date().getHours();
         let greeting = "Good Morning";
         if (currentHour >= 12 && currentHour < 18) greeting = "Good Afternoon";
-        else if (currentHour >= 18 || currentHour < 5) greeting = "Good Evening";
+        else if (currentHour >= 18 || currentHour < 5)
+          greeting = "Good Evening";
 
-        document.getElementById("welcome-text").innerText = `${greeting}, ${storedName}!`;
+        document.getElementById("welcome-text").innerText =
+          `${greeting}, ${storedName}!`;
 
         const container = document.querySelector(".appointment-cards");
 
@@ -85,20 +101,28 @@
           const appointments = await res.json();
 
           container.innerHTML = "";
+          
+          if (!res.ok)
+            throw new Error(
+              appointments.detail || "Failed to fetch appointments",
+            );
 
           if (appointments.length === 0) {
             container.innerHTML = `<div class="appt-card"><p>No upcoming appointments.</p></div>`;
             return;
           }
-          const status = app.status || "pending";
-          appointments.forEach((app) => {
-           const card = document.createElement("div");
+         
+          appointments.forEach((appointment) => {
+            const card = document.createElement("div");
             card.classList.add("appt-card");
+
+             const status = app.status || "pending";
+             
             card.innerHTML = `
-              <p class="appt-date">${app.date}</p>
-              <p class="appt-time">${app.time}</p>
-              <p class="appt-service">${app.service}</p>
-              <span class="badge ${(app.status || '').toLowerCase()}">${app.status}</span>
+              <p class="appt-date">${appointment.date}</p>
+              <p class="appt-time">${appointment.time}</p>
+              <p class="appt-service">${appointment.service}</p>
+              <span class="badge ${(appointment.status || "").toLowerCase()}">${appointment.status}</span>
             `;
             container.appendChild(card);
           });
