@@ -24,7 +24,7 @@ app.add_middleware(
 Base.metadata.create_all(bind=engine)
 
 app.include_router(auth_router, prefix="/auth")
-app.include_router(appointment_router)
+app.include_router(appointment_router, prefix="/api")
 
 # --- FRONTEND PATHS ---
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
