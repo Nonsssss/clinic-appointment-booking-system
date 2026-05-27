@@ -97,7 +97,8 @@
         const container = document.querySelector(".appointment-cards");
 
         try {
-          const res = await fetch(`/appointments?user_id=${userId}`);
+          // 1. Added missing /api prefix to match your FastAPI setup
+          const res = await fetch(`/api/appointments?user_id=${userId}`);
           const appointments = await res.json();
 
           container.innerHTML = "";
@@ -107,7 +108,6 @@
               appointments.detail || "Failed to fetch appointments",
             );
 
-          //  FIXED CODE
           if (appointments.length === 0) {
             container.innerHTML = `<div class="appt-card"><p>No upcoming appointments.</p></div>`;
             return;
@@ -115,25 +115,38 @@
 
           // Loop over each item cleanly
           appointments.forEach((item) => {
-            const card = document.createElement("div");
-            card.classList.add("appt-card");
+            // Use 'let' instead of 'const' so fallbacks are safe
+            let currentStatus = item.status || "Pending";
+            let displayDate = item.date || item.appointment_date || "N/A";
+            let displayTime = item.time || item.appointment_time || "N/A";
+            let displayService = item.service || "General";
 
-            // Safely extract status inside the loop context
-            const currentStatus = item.status || "pending";
-            if(currentStatus = "pending" || "Pending"){
+            // 2. Fixed comparison using strictly equal (===) and checking against lowercase
+            if (currentStatus.toLowerCase() === "pending") {
+              const card = document.createElement("div");
+              card.classList.add("appt-card");
+              
               card.innerHTML = `
-            <p class="appt-date">${item.date || item.appointment_date || "N/A"}</p>
-            <p class="appt-time">${item.time || item.appointment_time || "N/A"}</p>
-            <p class="appt-service">${item.service || "General"}</p>
-            <span class="badge ${currentStatus.toLowerCase()}">${currentStatus}</span>
-            `;
+                <p class="appt-date">${displayDate}</p>
+                <p class="appt-time">${displayTime}</p>
+                <p class="appt-service">${displayService}</p>
+                <span class="badge ${currentStatus.toLowerCase()}">${currentStatus}</span>
+              `;
+              
+              container.appendChild(card);
             }
-            
-            container.appendChild(card);
           });
+
+          // Fallback if they have appointments, but none of them are pending
+          if (container.children.length === 0) {
+            container.innerHTML = `<div class="appt-card"><p>No upcoming appointments.</p></div>`;
+          }
+
         } catch (err) {
           console.error("Error loading appointments:", err);
-        }
+          container.innerHTML = `<div class="appt-card" style="color: red;"><p>Error loading appointments.</p></div>`;
+        
+        } 
 
         document.querySelector(".nav-logout").addEventListener("click", (e) => {
           e.preventDefault();

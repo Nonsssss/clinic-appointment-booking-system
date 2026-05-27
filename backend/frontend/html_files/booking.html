@@ -5,21 +5,68 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Book Appointment - HSU</title>
-    <link rel="icon" type="image/x-icon" href="/static/images/logo2.png">
-  
+    <link rel="icon" type="image/x-icon" href="/static/images/logo2.png" />
+
     <link rel="stylesheet" href="/static/css/style.css" />
     <style>
-      .date-time-container { display: flex; gap: 50px; align-items: flex-start; margin-top: 20px; }
-      .calendar-section { display: flex; flex-direction: column; }
-      .calendar-section input[type="date"] { padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; width: 250px; }
-      .time-section { display: flex; flex-direction: column; }
-      .time-slots { display: grid; grid-template-columns: repeat(2, 120px); gap: 12px; max-height: 350px; overflow-y: auto; padding-right: 8px; margin-top: 10px; }
-      .time-slot { padding: 12px; border: none; background: #d9d9d9; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: 0.2s ease; }
-      .time-slot:hover { background: #bfbfbf; }
-      .time-slot.selected { background: #007bff; color: white; }
-      .booking-service-card.selected { border: 2px solid #007bff; background: #eef5ff; }
-      .time-slots::-webkit-scrollbar { width: 6px; }
-      .time-slots::-webkit-scrollbar-thumb { background: #bcbcbc; border-radius: 10px; }
+      .date-time-container {
+        display: flex;
+        gap: 50px;
+        align-items: flex-start;
+        margin-top: 20px;
+      }
+      .calendar-section {
+        display: flex;
+        flex-direction: column;
+      }
+      .calendar-section input[type="date"] {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        width: 250px;
+      }
+      .time-section {
+        display: flex;
+        flex-direction: column;
+      }
+      .time-slots {
+        display: grid;
+        grid-template-columns: repeat(2, 120px);
+        gap: 12px;
+        max-height: 350px;
+        overflow-y: auto;
+        padding-right: 8px;
+        margin-top: 10px;
+      }
+      .time-slot {
+        padding: 12px;
+        border: none;
+        background: #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition: 0.2s ease;
+      }
+      .time-slot:hover {
+        background: #bfbfbf;
+      }
+      .time-slot.selected {
+        background: #007bff;
+        color: white;
+      }
+      .booking-service-card.selected {
+        border: 2px solid #007bff;
+        background: #eef5ff;
+      }
+      .time-slots::-webkit-scrollbar {
+        width: 6px;
+      }
+      .time-slots::-webkit-scrollbar-thumb {
+        background: #bcbcbc;
+        border-radius: 10px;
+      }
     </style>
   </head>
   <body class="dashboard-page">
@@ -45,11 +92,26 @@
       <div class="booking-section">
         <h3 class="booking-subtitle">Available Services</h3>
         <div class="booking-services-grid">
-          <div class="booking-service-card" data-service-id="1"><ion-icon name="medkit-outline"></ion-icon><p>Medical Consultation</p></div>
-          <div class="booking-service-card" data-service-id="5"><ion-icon name="medical-outline"></ion-icon><p>Dental Consultation</p></div>
-          <div class="booking-service-card" data-service-id="2"><ion-icon name="document-text-outline"></ion-icon><p>Medical Clearance for Freshmen</p></div>
-          <div class="booking-service-card" data-service-id="3"><ion-icon name="briefcase-outline"></ion-icon><p>Medical Clearance for Internship</p></div>
-          <div class="booking-service-card" data-service-id="4"><ion-icon name="trophy-outline"></ion-icon><p>Medical Clearance for U-Week</p></div>
+          <div class="booking-service-card" data-service-id="1">
+            <ion-icon name="medkit-outline"></ion-icon>
+            <p>Medical Consultation</p>
+          </div>
+          <div class="booking-service-card" data-service-id="5">
+            <ion-icon name="medical-outline"></ion-icon>
+            <p>Dental Consultation</p>
+          </div>
+          <div class="booking-service-card" data-service-id="2">
+            <ion-icon name="document-text-outline"></ion-icon>
+            <p>Medical Clearance for Freshmen</p>
+          </div>
+          <div class="booking-service-card" data-service-id="3">
+            <ion-icon name="briefcase-outline"></ion-icon>
+            <p>Medical Clearance for Internship</p>
+          </div>
+          <div class="booking-service-card" data-service-id="4">
+            <ion-icon name="trophy-outline"></ion-icon>
+            <p>Medical Clearance for U-Week</p>
+          </div>
         </div>
       </div>
 
@@ -61,11 +123,23 @@
           <div class="form-row">
             <div class="form-group">
               <label>Full Name</label>
-              <input id="booking-fullname" type="text" placeholder="Enter your full name" readonly />
+              <input
+                id="booking-fullname"
+                type="text"
+                placeholder="Enter your full name"
+                readonly
+              />
             </div>
             <div class="form-group">
               <label>Age</label>
-              <input id="age" type="number" placeholder="Enter your age" />
+              <input
+                id="age"
+                type="number"
+                min="15"
+                max="100"
+                placeholder="Enter your age"
+                oninput="validity.valid || (value = '')"
+              />
             </div>
           </div>
           <div class="form-row">
@@ -80,12 +154,17 @@
             </div>
             <div class="form-group">
               <label>Contact Number</label>
-              <input type="text" placeholder="Enter your contact number" />
+              <input type="number" placeholder="Enter your contact number" />
             </div>
           </div>
           <div class="form-group">
             <label>Email</label>
-            <input id="booking-email" type="email" placeholder="Enter your email" readonly />
+            <input
+              id="booking-email"
+              type="email"
+              placeholder="Enter your email"
+              readonly
+            />
           </div>
           <div class="form-group">
             <label>Reason for Visit</label>
@@ -112,12 +191,20 @@
 
       <div class="booking-actions">
         <a href="/dashboard" class="btn btn-outline"> Cancel </a>
-        <button id="confirmBtn" class="btn btn-primary" type="button"> Confirm </button>
+        <button id="confirmBtn" class="btn btn-primary" type="button">
+          Confirm
+        </button>
       </div>
     </div>
 
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
 
     <script>
       function convertTo24Hour(timeStr) {
@@ -169,7 +256,8 @@
         function generateTimeSlots() {
           timeContainer.innerHTML = "";
           if (!selectedServiceName) {
-            timeContainer.innerHTML = "<p style='color:#666; font-size:14px;'>Please select a service first.</p>";
+            timeContainer.innerHTML =
+              "<p style='color:#666; font-size:14px;'>Please select a service first.</p>";
             return;
           }
           const neededDuration = serviceMap[selectedServiceName].duration;
@@ -187,19 +275,30 @@
             const now = new Date();
             const selectedDate = dateInput.value;
             if (selectedDate) {
-              const slotDateTime = new Date(`${selectedDate}T${convertTo24Hour(timeStr)}`);
-              if (selectedDate === now.toISOString().split("T")[0] && slotDateTime <= now) {
+              const slotDateTime = new Date(
+                `${selectedDate}T${convertTo24Hour(timeStr)}`,
+              );
+              if (
+                selectedDate === now.toISOString().split("T")[0] &&
+                slotDateTime <= now
+              ) {
                 btn.disabled = true;
                 btn.style.opacity = 0.3;
                 btn.style.cursor = "not-allowed";
               }
-              const potentialStart = new Date(`${selectedDate}T${convertTo24Hour(timeStr)}`);
-              const potentialEnd = new Date(potentialStart.getTime() + neededDuration * 60000);
+              const potentialStart = new Date(
+                `${selectedDate}T${convertTo24Hour(timeStr)}`,
+              );
+              const potentialEnd = new Date(
+                potentialStart.getTime() + neededDuration * 60000,
+              );
               const isUnavailable = bookedSlots.some((slot) => {
                 const slotStart = new Date(slot.start);
                 const slotEnd = new Date(slot.end);
-                return (potentialStart >= slotStart && potentialStart < slotEnd) ||
-                       (potentialStart < slotStart && potentialEnd > slotStart);
+                return (
+                  (potentialStart >= slotStart && potentialStart < slotEnd) ||
+                  (potentialStart < slotStart && potentialEnd > slotStart)
+                );
               });
               if (isUnavailable) {
                 btn.disabled = true;
@@ -210,7 +309,9 @@
 
             btn.addEventListener("click", () => {
               if (btn.disabled) return;
-              document.querySelectorAll(".time-slot").forEach((b) => b.classList.remove("selected"));
+              document
+                .querySelectorAll(".time-slot")
+                .forEach((b) => b.classList.remove("selected"));
               btn.classList.add("selected");
               selectedTime = timeStr;
             });
@@ -223,23 +324,54 @@
           if (dateInput.value && selectedServiceName) {
             const serviceId = serviceMap[selectedServiceName].id;
             try {
-              const res = await fetch(`/appointments/availability/${serviceId}/${dateInput.value}`);
+              const res = await fetch(
+                `/appointments/availability/${serviceId}/${dateInput.value}`,
+              );
               const data = await res.json();
               bookedSlots = data.booked || [];
-            } catch (err) { console.error(err); }
+            } catch (err) {
+              console.error(err);
+            }
           }
           generateTimeSlots();
         }
 
         confirmBtn.addEventListener("click", async (e) => {
           e.preventDefault();
-          if (!selectedServiceName) { alert("⚠ Please select a service first."); return; }
-          if (!fullnameInput.value) { alert("Please enter your name"); return; }
-          if (!dateInput.value) { alert("⚠ Please select a date."); return; }
-          if (!selectedTime) { alert("⚠ Please select a time slot."); return; }
+          if (!selectedServiceName) {
+            alert("⚠ Please select a service first.");
+            return;
+          }
+          if (!fullnameInput.value) {
+            alert("Please enter your name");
+            return;
+          }
+          if (!dateInput.value) {
+            alert("⚠ Please select a date.");
+            return;
+          }
+          if (!selectedTime) {
+            alert("⚠ Please select a time slot.");
+            return;
+          }
+          const ageInput = document.getElementById("age");
+          const ageValue = parseInt(ageInput.value);
 
+          if (!ageInput.value || isNaN(ageValue)) {
+            alert("⚠ Please enter a valid age.");
+            return;
+          }
+          if (ageValue < 15 || ageValue > 100) {
+            alert("⚠ Age must be between 15 and 100 years old.");
+            return;
+          }
+
+          
           const currentUserId = localStorage.getItem("user_id");
-          if (!currentUserId) { alert("❌ Session Error: Please re-login."); return; }
+          if (!currentUserId) {
+            alert("❌ Session Error: Please re-login.");
+            return;
+          }
 
           // Convert to 24-hour format before sending so backend parse never fails
           const time24 = convertTo24Hour(selectedTime); // e.g. "09:00:00"
@@ -261,7 +393,9 @@
           })
             .then(async (res) => {
               if (!res.ok) {
-                const errorData = await res.json().catch(() => ({ detail: "Unknown server error" }));
+                const errorData = await res
+                  .json()
+                  .catch(() => ({ detail: "Unknown server error" }));
                 return Promise.reject(errorData);
               }
               return res.json();
@@ -272,7 +406,10 @@
             })
             .catch((err) => {
               console.error("Booking failed:", err);
-              alert("❌ Booking failed: " + (err.detail || "An unexpected error occurred."));
+              alert(
+                "❌ Booking failed: " +
+                  (err.detail || "An unexpected error occurred."),
+              );
             });
         });
       });
