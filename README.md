@@ -68,7 +68,7 @@ The system architecture implementation relies on five distinct execution tracks:
 
 ---
 
-## 🧪 Testing Metrics & System Status
+##  Testing Metrics & System Status
 The following matrix tracks QA test scenarios, identifying critical compliance objectives along with current system performance status:
 
 | Test ID | Feature Target | Test Scenario / Action | Expected Performance Target | Actual Performance Result | Status |
@@ -88,3 +88,21 @@ The following matrix tracks QA test scenarios, identifying critical compliance o
 | **TC-13** | Status Notification | Approve or reject appointment. | User receives email update. | No email notification. | <span style="color:red;font-weight:bold;">FAIL</span> |
 | **TC-14** | Rejection Feedback | Reject appointment request. | User sees rejection reason. | No rejection feedback. | <span style="color:red;font-weight:bold;">FAIL</span> |
 | **TC-15** | Password Visibility | Open login password field. | Eye icon available. | No eye icon available. | <span style="color:red;font-weight:bold;">FAIL</span> |
+
+---
+
+## Contributors
+*Backend*
+ ### [** Toring, Mhark Ellie**] (https://github.com/ellr4)
+ ### [**Puna, Mitchelclaren**]  (https://github.com/MitchelclarenPuna)
+---
+*Frontend*
+### [**Tamang, Kyla Nicole**] (https://github.com/kyienicole)
+### [**Rapales, Jonas**] (https://github.com/jonasrapales23-crypto)
+---
+*Database & DevOps*
+### [**Anire, John Benedict Vianney**] (https://github.com/Nonsssss)
+---
+*Documentation & Testing*
+### [**Corpuz, Grazzily**] (https://github.com/2024-200486-corpuz)
+---
