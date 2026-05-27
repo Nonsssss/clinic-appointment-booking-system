@@ -997,3 +997,290 @@ body {
     color: #333;
     vertical-align: middle;
 }
+
+@media (max-width: 992px) {
+
+    .navbar {
+        padding: 12px 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .nav-links {
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero,
+    .services-section,
+    .contact-section,
+    .dashboard-container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .hero-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 40px;
+    }
+
+    .hero-text {
+        max-width: 100%;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .hero-heading {
+        font-size: 2.2rem;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: auto;
+    }
+
+    .hero-img {
+        border-radius: 16px;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .service-card:nth-child(4),
+    .service-card:nth-child(5) {
+        grid-column: auto;
+        margin: 0;
+    }
+
+    .contact-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .booking-services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .date-time-container {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .calendar-placeholder {
+        width: 100%;
+    }
+
+    .appointments-table-container {
+        overflow-x: auto;
+    }
+
+    .appointments-table {
+        min-width: 700px;
+    }
+}
+
+
+/* Mobile Devices */
+@media (max-width: 768px) {
+
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        padding: 14px 16px;
+    }
+
+    .nav-logo {
+        justify-content: center;
+    }
+
+    .nav-title {
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .nav-links {
+        width: 100%;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .nav-links li a {
+        font-size: 13px;
+    }
+
+    .hero {
+        padding: 140px 20px 60px;
+        min-height: auto;
+    }
+
+    .hero-heading {
+        font-size: 1.9rem;
+    }
+
+    .hero-desc {
+        font-size: 0.95rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .services-section {
+        padding: 40px 20px;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-section {
+        padding: 40px 20px;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .login-box {
+        width: 90%;
+        padding: 30px 24px;
+    }
+
+    .dashboard-container {
+        padding: 120px 16px 30px;
+    }
+
+    .user-welcome {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .appointment-cards {
+        justify-content: center;
+    }
+
+    .appt-card {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .service-pills {
+        justify-content: center;
+    }
+
+    .booking-services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .patient-form {
+        max-width: 100%;
+    }
+
+    .booking-actions,
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .booking-actions .btn,
+    .form-actions .btn {
+        width: 100%;
+    }
+
+    .calendar-placeholder {
+        height: 220px;
+    }
+
+    .time-range {
+        flex-wrap: wrap;
+    }
+
+    .confirmation-box {
+        padding: 40px 16px;
+    }
+
+    .appointments-table th,
+    .appointments-table td {
+        padding: 12px;
+        font-size: 12px;
+    }
+}
+
+
+/* Small Phones */
+@media (max-width: 480px) {
+
+    .hero-heading {
+        font-size: 1.6rem;
+        line-height: 1.3;
+    }
+
+    .hero-label {
+        font-size: 11px;
+        padding: 5px 14px;
+    }
+
+    .hero-desc {
+        font-size: 0.9rem;
+    }
+
+    .services-title,
+    .booking-title,
+    .booking-subtitle,
+    .contact-section h2 {
+        font-size: 16px;
+    }
+
+    .service-card {
+        padding: 20px 16px;
+    }
+
+    .service-card h3 {
+        font-size: 14px;
+    }
+
+    .service-card p {
+        font-size: 11px;
+    }
+
+    .login-box h2 {
+        font-size: 20px;
+    }
+
+    .btn-login {
+        font-size: 14px;
+    }
+
+    .user-welcome h2 {
+        font-size: 18px;
+    }
+
+    .appt-card {
+        min-height: 140px;
+    }
+
+    .booking-service-card {
+        padding: 20px 14px;
+    }
+
+    .confirmation-box h3 {
+        font-size: 18px;
+    }
+
+    .confirmation-box p {
+        font-size: 13px;
+    }
+}

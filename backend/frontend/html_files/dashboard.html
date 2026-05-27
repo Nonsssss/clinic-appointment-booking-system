@@ -90,9 +90,9 @@
             container.innerHTML = `<div class="appt-card"><p>No upcoming appointments.</p></div>`;
             return;
           }
-
+          const status = app.status || "Pending";
           appointments.forEach((app) => {
-            const card = document.createElement("div");
+           const card = document.createElement("div");
             card.classList.add("appt-card");
             card.innerHTML = `
               <p class="appt-date">${app.date}</p>
