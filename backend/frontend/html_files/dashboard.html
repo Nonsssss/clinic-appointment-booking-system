@@ -101,29 +101,32 @@
           const appointments = await res.json();
 
           container.innerHTML = "";
-          
+
           if (!res.ok)
             throw new Error(
               appointments.detail || "Failed to fetch appointments",
             );
 
+          //  FIXED CODE
           if (appointments.length === 0) {
             container.innerHTML = `<div class="appt-card"><p>No upcoming appointments.</p></div>`;
             return;
           }
-         
-          appointments.forEach((appointment) => {
+
+          // Loop over each item cleanly
+          appointments.forEach((item) => {
             const card = document.createElement("div");
             card.classList.add("appt-card");
 
-             const status = app.status || "pending";
-             
+            // Safely extract status inside the loop context
+            const currentStatus = item.status || "Pending";
+
             card.innerHTML = `
-              <p class="appt-date">${appointment.date}</p>
-              <p class="appt-time">${appointment.time}</p>
-              <p class="appt-service">${appointment.service}</p>
-              <span class="badge ${(appointment.status || "").toLowerCase()}">${appointment.status}</span>
-            `;
+    <p class="appt-date">${item.date || item.appointment_date || "N/A"}</p>
+    <p class="appt-time">${item.time || item.appointment_time || "N/A"}</p>
+    <p class="appt-service">${item.service || "General"}</p>
+    <span class="badge ${currentStatus.toLowerCase()}">${currentStatus}</span>
+  `;
             container.appendChild(card);
           });
         } catch (err) {
