@@ -154,7 +154,7 @@
             </div>
             <div class="form-group">
               <label>Contact Number</label>
-              <input type="number" placeholder="Enter your contact number" />
+             <input id="contact-number" type="tel" placeholder="e.g. 09123456789" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
             </div>
           </div>
           <div class="form-group">
@@ -325,7 +325,7 @@
             const serviceId = serviceMap[selectedServiceName].id;
             try {
               const res = await fetch(
-                `/appointments/availability/${serviceId}/${dateInput.value}`,
+                `/api/appointments/availability/${serviceId}/${dateInput.value}`,
               );
               const data = await res.json();
               bookedSlots = data.booked || [];
@@ -386,7 +386,7 @@
           };
 
           // FIX: use relative URL, not hardcoded localhost
-          fetch("/appointments", {
+          fetch("/api/appointments", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),

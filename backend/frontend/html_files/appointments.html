@@ -54,7 +54,7 @@
         appointmentContainer.innerHTML = "";
 
         try {
-          const response = await fetch(`/appointments?user_id=${userId}`);
+          const response = await fetch(`/api/appointments?user_id=${userId}`);
           const appointments = await response.json();
 
           if (appointments.length === 0) {

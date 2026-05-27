@@ -62,7 +62,7 @@
 
       async function fetchAppointmentHistory() {
         try {
-          const response = await fetch("/appointments");
+          const response = await fetch("/api/appointments");
           if (!response.ok) throw new Error("Could not load data from database.");
           const allAppointments = await response.json();
           historyAppointments = allAppointments.filter((app) => {

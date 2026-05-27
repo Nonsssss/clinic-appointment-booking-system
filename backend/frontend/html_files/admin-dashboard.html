@@ -54,7 +54,7 @@
 
       async function fetchPendingRequests() {
         try {
-          const response = await fetch("/appointments?status=pending");
+          const response = await fetch("/api/appointments?status=pending");
           if (!response.ok) throw new Error("Failed to fetch data from database.");
           pendingAppointments = await response.json();
           renderTable();
@@ -71,7 +71,7 @@
       async function processAppointment(appointmentId, status, buttonElement) {
         if (!appointmentId) { alert("❌ Error: Appointment ID is undefined."); return; }
         try {
-          const response = await fetch(`/appointments/${appointmentId}/status`, {
+          const response = await fetch(`/api/appointments/${appointmentId}/status`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ status: status }),
