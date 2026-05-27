@@ -26,6 +26,9 @@ jobs:
           --health-retries=10
 
     steps:
+     
+
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -78,9 +81,17 @@ jobs:
               print("DB CONNECTED:", result.scalar())
           EOF
           
+
       - name: Run FastAPI import check
         env:
           DATABASE_URL: mysql+pymysql://appuser:app123@127.0.0.1:3306/clinic_booking_system
         run: |
           cd backend
           python -c "import main; print('FastAPI app imports OK')"
+        
+
+      - name: Deploy to Railway
+        run: railway deploy --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
