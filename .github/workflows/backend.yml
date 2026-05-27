@@ -1,15 +1,12 @@
 name: FastAPI CI/CD
-
 on:
   push:
     branches: [main, dev]
   pull_request:
     branches: [main, dev]
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     services:
       mysql:
         image: mysql:8.0
@@ -24,11 +21,7 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
-
     steps:
-     
-
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -69,31 +62,39 @@ jobs:
 
       - name: Test DB connection via SQLAlchemy
         env:
-          DATABASE_URL: mysql+pymysql://appuser:app123@127.0.0.1:3306/clinic_booking_system
+          MYSQLHOST: 127.0.0.1
+          MYSQLPORT: 3306
+          MYSQLUSER: appuser
+          MYSQLPASSWORD: app123
+          MYSQLDATABASE: clinic_booking_system
         run: |
           cd backend
           python - << 'EOF'
           from database.db import engine
           from sqlalchemy import text
-
           with engine.connect() as conn:
               result = conn.execute(text("SELECT 1"))
               print("DB CONNECTED:", result.scalar())
           EOF
-          
 
       - name: Run FastAPI import check
         env:
-          DATABASE_URL: mysql+pymysql://appuser:app123@127.0.0.1:3306/clinic_booking_system
+          MYSQLHOST: 127.0.0.1
+          MYSQLPORT: 3306
+          MYSQLUSER: appuser
+          MYSQLPASSWORD: app123
+          MYSQLDATABASE: clinic_booking_system
         run: |
           cd backend
           python -c "import main; print('FastAPI app imports OK')"
-      
+
+      # Only deploy on push to main (not on pull requests)
       - name: Install Railway CLI
-        run: npm install -g @railway/cli   
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm install -g @railway/cli
 
       - name: Deploy to Railway
-        run: railway deploy --detach
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: railway up --service ${{ secrets.RAILWAY_SERVICE_NAME }}
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
