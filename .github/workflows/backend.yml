@@ -62,16 +62,27 @@ jobs:
 
       - name: Test DB connection via SQLAlchemy
         env:
-          MYSQLHOST: 127.0.0.1
-          MYSQLPORT: 3306
-          MYSQLUSER: appuser
-          MYSQLPASSWORD: app123
-          MYSQLDATABASE: clinic_booking_system
+          MYSQLHOST: "127.0.0.1"
+          MYSQLPORT: "3306"
+          MYSQLUSER: "appuser"
+          MYSQLPASSWORD: "app123"
+          MYSQLDATABASE: "clinic_booking_system"
         run: |
           cd backend
           python - << 'EOF'
-          from database.db import engine
-          from sqlalchemy import text
+          import os
+          from sqlalchemy import create_engine, text
+
+          host = os.environ["MYSQLHOST"]
+          port = os.environ["MYSQLPORT"]
+          user = os.environ["MYSQLUSER"]
+          password = os.environ["MYSQLPASSWORD"]
+          db = os.environ["MYSQLDATABASE"]
+
+          url = f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}"
+          print(f"Connecting to: mysql+pymysql://{user}:***@{host}:{port}/{db}")
+
+          engine = create_engine(url, pool_pre_ping=True)
           with engine.connect() as conn:
               result = conn.execute(text("SELECT 1"))
               print("DB CONNECTED:", result.scalar())
@@ -79,16 +90,15 @@ jobs:
 
       - name: Run FastAPI import check
         env:
-          MYSQLHOST: 127.0.0.1
-          MYSQLPORT: 3306
-          MYSQLUSER: appuser
-          MYSQLPASSWORD: app123
-          MYSQLDATABASE: clinic_booking_system
+          MYSQLHOST: "127.0.0.1"
+          MYSQLPORT: "3306"
+          MYSQLUSER: "appuser"
+          MYSQLPASSWORD: "app123"
+          MYSQLDATABASE: "clinic_booking_system"
         run: |
           cd backend
           python -c "import main; print('FastAPI app imports OK')"
 
-      # Only deploy on push to main (not on pull requests)
       - name: Install Railway CLI
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: npm install -g @railway/cli
